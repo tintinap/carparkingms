@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register</title>
+  {% load static %}
+  <link rel="stylesheet" href="https://unpkg.com/muse-ui/dist/muse-ui.css">
+  <link href="https://fonts.googleapis.com/css?family=Kanit" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.bootcss.com/material-design-icons/3.0.1/iconfont/material-icons.css">
+  <style>
+  body {
+    font-family: 'Kanit', sans-serif;
+  }
+  </style>
+</head>
+<body>
+
+<div id="registerpage">
+  <header>
+    <mu-appbar style="width: 100%;position: fixed;" color="amber500"  z-depth="0">
+      <mu-flex justify-content="start">
+        <mu-flex justify-content="center" >
+          <img width="100" slot="default" src="{% static 'images/cms-logo.png' %}"/>
+        </mu-flex>
+      </mu-flex>
+      <mu-button icon slot="right" @click="menuOpen = !menuOpen"><mu-icon value="menu"></mu-icon></mu-button>
+    </mu-appbar>
+  </header>
+  {#sidebar#}
+  <mu-drawer v-if="isLogin" :open.sync="menuOpen" :docked="docked" :right="false">
+    <mu-list>
+      <mu-list-item button>
+        <mu-list-item-title>Profile</mu-list-item-title>
+        <mu-icon right value="account_circle"></mu-icon>
+      </mu-list-item>
+      <mu-list-item button>
+        <mu-list-item-title>Buy Package</mu-list-item-title>
+        <mu-icon right value="local_activity"></mu-icon>
+      </mu-list-item>
+      <mu-divider></mu-divider>
+      <mu-list-item button>
+        <mu-list-item-title >Change Password</mu-list-item-title>
+      </mu-list-item>
+      <mu-list-item button>
+        <mu-list-item-title style="color: #f44336;">Logout</mu-list-item-title>
+      </mu-list-item>
+    </mu-list>
+  </mu-drawer>
+  <mu-drawer v-else :open.sync="menuOpen" :docked="docked" :right="false">
+    <mu-list>
+      <mu-list-item button>
+        <mu-list-item-title>Login</mu-list-item-title>
+        <mu-icon right value="person"></mu-icon>
+      </mu-list-item>
+      <mu-list-item button>
+        <mu-list-item-title>Register</mu-list-item-title>
+        <mu-icon right value="person_add"></mu-icon>
+      </mu-list-item>
+    </mu-list>
+  </mu-drawer>
+
+  {#MainContent#}
+  <mu-container fluid="true" style="padding-top: 5em;">
+    <mu-row style="padding-top: 1em;">
+      <mu-col span="12">
+        <form method="get">
+          <mu-flex justify-content="center">
+            <mu-flex justify-content="center" ><mu-icon value="person"></mu-icon>ข้อมูลส่วนตัวผู้ใช้</mu-flex>
+          </mu-flex>
+          <mu-text-field
+            label-float
+            name="firstname"
+            v-model.lazy="firstname"
+            color="amber600"
+            full-width label="ชื่อจริง">
+          </mu-text-field><br/>
+          <mu-text-field
+            label-float
+            name="lastname"
+            v-model.lazy="lastname"
+            color="amber600"
+            full-width label="นามสกุล">
+          </mu-text-field><br/>
+          <mu-text-field
+            label-float
+            name="email"
+            v-model.lazy="email"
+            color="amber600"
+            full-width label="Email"
+            suffix="@kmitl.ac.th">
+          </mu-text-field><br/>
+          <mu-text-field
+            label-float
+            name="phone"
+            v-model.lazy="phone"
+            color="amber600"
+            full-width label="เบอร์โทรศัพท์"
+            type="number">
+          </mu-text-field><br/>
+          <mu-flex justify-content="center">
+            <mu-flex justify-content="center" ><mu-icon value="directions_car"></mu-icon>ข้อมูลรถยนต์ผู้ใช้</mu-flex>
+          </mu-flex>
+          <mu-text-field
+            label-float
+            name="carid"
+            v-model.lazy="carid"
+            color="amber600"
+            full-width label="ทะเบียนรถ">
+          </mu-text-field><br/>
+          <mu-text-field
+            label-float
+            name="carbrand"
+            v-model.lazy="carbrand"
+            color="amber600"
+            full-width label="ยี่ห้อ">
+          </mu-text-field><br/>
+          <mu-text-field
+            label-float
+            name="carmodel"
+            v-model.lazy="carmodel"
+            color="amber600"
+            full-width label="รุ่น">
+          </mu-text-field><br/>
+          <mu-text-field
+            label-float
+            name="carcolor"
+            v-model.lazy="carcolor"
+            color="amber600"
+            full-width label="สี">
+          </mu-text-field><br/>
+          <mu-flex justify-content="center">
+            <mu-flex justify-content="center" ><mu-icon value="visibility"></mu-icon>ชื่อผู้ใช้และรหัสผ่าน</mu-flex>
+          </mu-flex>
+          <mu-text-field
+            label-float
+            v-model.lazy="username"
+            name="username"
+            color="amber600"
+            full-width label="ชื่อผู้ใช้">
+          </mu-text-field><br/>
+          <mu-text-field
+            label-float
+            v-model.lazy="password1"
+            name="password1"
+            color="amber600"
+            type="password"
+            full-width label="รหัสผ่าน">
+          </mu-text-field><br/>
+          <mu-text-field
+            label-float
+            v-model.lazy="password2"
+            name="password2"
+            color="amber600"
+            :action-icon="passVisibility ? 'visibility_off' : 'visibility'"
+            :action-click="() => (passVisibility = !passVisibility)"
+            :type="passVisibility ? 'text' : 'password'"
+            full-width label="ยืนยันรหัสผ่าน">
+          </mu-text-field><br/>
+          <mu-flex >
+            <mu-checkbox color="amber600" v-model="confirmRegister" label="ข้าพเจ้ายอมรับข้อตกลงและเงื่อนไขการงานของเว็บแอพลิเคชั่นนี้"></mu-checkbox>
+          </mu-flex>
+          <mu-flex justify-content="center">
+            <mu-flex justify-content="center" style="padding-top: 1em;" >
+              <mu-button type="submit" large color="amber500">REGISTER<mu-icon right value="chevron_right"></mu-icon></mu-button>
+            </mu-flex>
+          </mu-flex>
+        </form>
+      </mu-col>
+    </mu-row><br/>
+  </mu-container>
+
+{#  footer area#}
+{#  <footer style="width: 100%;height: 5em;background-color: #ffc107;margin-top: 1em;">#}
+{#    <mu-container style="padding-top: 24px;">#}
+{#      <mu-row>#}
+{#        <mu-col span="8">#}
+{#          <mu-flex justify-content="start">#}
+{#            <mu-flex justify-content="center" >© 2019 Carparking Management System.</mu-flex>#}
+{#          </mu-flex>#}
+{#        </mu-col>#}
+{#        <mu-col span="4">#}
+{#          <mu-flex justify-content="end">#}
+{#            <mu-flex justify-content="center" >#}
+{#              <img width="50" src="{% static 'images/cms-logo.png' %}"/>#}
+{#            </mu-flex>#}
+{#          </mu-flex>#}
+{#        </mu-col>#}
+{#      </mu-row>#}
+{#    </mu-container>#}
+{#  </footer>#}
+</div>
+
+{#script area#}
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script src="https://unpkg.com/muse-ui/dist/muse-ui.js"></script>
+
+<script>
+  var app = new Vue({
+    delimiters: ['[[', ']]'],
+    el: '#registerpage',
+    data(){
+        return({
+            docked: false,
+            menuOpen: false,
+            isLogin: true,
+            firstname: '',
+            lastname: '',
+            email: '',
+            phone: '',
+            carid: '',
+            carbrand: '',
+            carmodel: '',
+            carcolor: '',
+            username: '',
+            password1: '',
+            password2: '',
+            confirmRegister: false,
+            passVisibility: false,
+        })
+    }
+  })
+</script>
+
+</body>
+</html>
