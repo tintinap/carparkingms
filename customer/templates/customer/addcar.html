@@ -21,41 +21,29 @@
     <mu-appbar style="width: 100%;position: fixed;" color="amber500"  z-depth="0">
       <mu-flex justify-content="start">
         <mu-flex justify-content="center" >
-          <img width="100" slot="default" src="{% static 'images/cms-logo.png' %}"/>
+          <img width="100" slot="default" src="{% static 'images/cms-logo.png' %}" @click="window.location = '{% url 'index' %}'"/>
         </mu-flex>
       </mu-flex>
       <mu-button icon slot="right" @click="menuOpen = !menuOpen"><mu-icon value="menu"></mu-icon></mu-button>
     </mu-appbar>
   </header>
   {#sidebar#}
-  <mu-drawer v-if="isLogin" :open.sync="menuOpen" :docked="docked" :right="false">
+  <mu-drawer :open.sync="menuOpen" :docked="docked" :right="false">
     <mu-list>
-      <mu-list-item button>
+      <mu-list-item button @click="window.location = '{% url 'profile' %}'">
         <mu-list-item-title>Profile</mu-list-item-title>
         <mu-icon right value="account_circle"></mu-icon>
       </mu-list-item>
-      <mu-list-item button>
+      <mu-list-item button @click="window.location = '{% url 'buy_package' %}'">
         <mu-list-item-title>Buy Package</mu-list-item-title>
         <mu-icon right value="local_activity"></mu-icon>
       </mu-list-item>
       <mu-divider></mu-divider>
-      <mu-list-item button>
+      <mu-list-item button @click="window.location = '{% url 'change_password' %}'">
         <mu-list-item-title >Change Password</mu-list-item-title>
       </mu-list-item>
       <mu-list-item button>
         <mu-list-item-title style="color: #f44336;">Logout</mu-list-item-title>
-      </mu-list-item>
-    </mu-list>
-  </mu-drawer>
-  <mu-drawer v-else :open.sync="menuOpen" :docked="docked" :right="false">
-    <mu-list>
-      <mu-list-item button>
-        <mu-list-item-title>Login</mu-list-item-title>
-        <mu-icon right value="person"></mu-icon>
-      </mu-list-item>
-      <mu-list-item button>
-        <mu-list-item-title>Register</mu-list-item-title>
-        <mu-icon right value="person_add"></mu-icon>
       </mu-list-item>
     </mu-list>
   </mu-drawer>
@@ -139,7 +127,6 @@
         return({
             docked: false,
             menuOpen: false,
-            isLogin: true,
             carid: '',
             carbrand: '',
             carmodel: '',
