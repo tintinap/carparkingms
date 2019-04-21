@@ -12,9 +12,6 @@ def buypackage(request):
 def register(request):
     return render(request, 'customer/register.html')
 
-def payment(request):
-    return render(request, 'customer/payment.html')
-
 def profile(request):
     return render(request, 'customer/profile.html')
 

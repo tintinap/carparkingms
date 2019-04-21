@@ -85,42 +85,120 @@
         </mu-card>
       </mu-col>
     </mu-row>
+  </mu-container>
 
-    <mu-row style="padding-top: 1em;">
+  <mu-container fluid="true" style="padding-top: 1em;">
+    <mu-row style="padding-bottom: 5px;">
+      <mu-col>
+          <mu-flex justify-content="start">
+    <mu-flex justify-content="center" >Select Payment Methods</mu-flex>
+  </mu-flex>
+      </mu-col>
+    </mu-row>
+    <mu-row>
       <mu-col span="12">
-        <mu-card>
-          <mu-list>
-            <mu-sub-header>กรุณาเลือกPackage</mu-sub-header>
-            <mu-divider></mu-divider>
-          <mu-list-item>
-            <mu-list-item-content>
-              <mu-list-item-title>100 points</mu-list-item-title>
-            </mu-list-item-content>
-            <mu-button color="amber700" right>40 THB</mu-button>
-          </mu-list-item>
-          <mu-divider></mu-divider>
-          <mu-list-item>
-            <mu-list-item-content>
-              <mu-list-item-title>300 points</mu-list-item-title>
-            </mu-list-item-content>
-            <mu-button color="amber700" right>100 THB</mu-button>
-          </mu-list-item>
-          <mu-divider></mu-divider>
-          <mu-list-item>
-            <mu-list-item-content>
-              <mu-list-item-title>500 points</mu-list-item-title>
-            </mu-list-item-content>
-            <mu-button color="amber700" right>160 THB</mu-button>
-          </mu-list-item>
-          <mu-divider></mu-divider>
-          <mu-list-item>
-            <mu-list-item-content>
-              <mu-list-item-title>1000 points</mu-list-item-title>
-            </mu-list-item-content>
-            <mu-button color="amber700" right>300 THB</mu-button>
-          </mu-list-item>
-        </mu-list>
-        </mu-card>
+        <mu-expansion-panel>
+          <div slot="header">
+            <mu-flex align-items="center">
+              <mu-flex justify-content="center" fill><mu-avatar size="30" color="pink300"><mu-icon value="credit_card"></mu-icon></mu-avatar></mu-flex>
+              <mu-flex style="padding-left: 1em;" justify-content="center" fill>Credit / Debit card</mu-flex>
+            </mu-flex>
+          </div>
+          <div>
+            <mu-container>
+              <mu-row>
+                <mu-col span="12">
+                  <mu-select label="กรุณาเลือกธนาคาร" v-model="selectedBank" full-width color="pink500">
+                    <mu-option avatar label="Siam Commercial Bank" value="SCB">
+                      <mu-list-item-action avatar>
+                        <mu-avatar size="36"><img src="{% static 'images/scb.png' %}" /></mu-avatar>
+                      </mu-list-item-action>
+                      <mu-list-item-content>
+                        <mu-list-item-title>Siam Commercial Bank</mu-list-item-title>
+                      </mu-list-item-content>
+                    </mu-option>
+                    <mu-option avatar label="Kasikorn Bank" value="KBANK">
+                      <mu-list-item-action avatar>
+                        <mu-avatar size="36"><img src="{% static 'images/kbank.png' %}" /></mu-avatar>
+                      </mu-list-item-action>
+                      <mu-list-item-content>
+                        <mu-list-item-title>Kasikorn Bank</mu-list-item-title>
+                      </mu-list-item-content>
+                    </mu-option>
+                  </mu-select>
+                </mu-col>
+              </mu-row>
+              <mu-row>
+                <mu-col span="12">
+                  <mu-text-field v-model="cdCardnum" label="หมายเลขบัตรเครดิต/เดบิต" label-float full-width color="pink500"></mu-text-field>
+                </mu-col>
+              </mu-row>
+              <mu-row>
+                <mu-col span="12">
+                  <p style="padding-left: 32px;">กรุณาเลือก Package</p>
+                </mu-col>
+              </mu-row>
+              <mu-row>
+                <mu-col span="12">
+                  <mu-flex>
+                    <mu-radio value="100" v-model="packagePrice" label="100 Points (50 THB)" color="pink500"></mu-radio>
+                  </mu-flex><br>
+                  <mu-flex>
+                    <mu-radio value="220" v-model="packagePrice" label="220 Points (100 THB)" color="pink500"></mu-radio>
+                  </mu-flex><br>
+                  <mu-flex>
+                    <mu-radio value="350" v-model="packagePrice" label="350 Points (150 THB)" color="pink500"></mu-radio>
+                  </mu-flex><br>
+                  <mu-flex>
+                    <mu-radio value="480" v-model="packagePrice" label="480 Points (200 THB)" color="pink500"></mu-radio>
+                  </mu-flex><br>
+                </mu-col>
+              </mu-row>
+            </mu-container>
+          </div>
+          <mu-button slot="action" flat>Cancel</mu-button>
+          <mu-button slot="action" flat color="pink500">Save</mu-button>
+        </mu-expansion-panel>
+        <mu-expansion-panel>
+          <div slot="header">
+            <mu-flex align-items="center">
+              <mu-flex justify-content="center" fill><mu-avatar size="30" color="blue300"><mu-icon value="redeem"></mu-icon></mu-avatar></mu-flex>
+              <mu-flex style="padding-left: 1em;" justify-content="center" fill>Top-up Card</mu-flex>
+            </mu-flex>
+          </div>
+          <div>
+            <mu-container>
+              <mu-row>
+                <mu-col span="12">
+                  <mu-text-field v-model="topupCard" label="หมายเลขบัตรเติมเงิน" label-float full-width color="blue500"></mu-text-field>
+                </mu-col>
+              </mu-row>
+              <mu-row>
+                <mu-col span="12">
+                  <p style="padding-left: 32px;">กรุณาเลือก Package</p>
+                </mu-col>
+              </mu-row>
+              <mu-row>
+                <mu-col span="12">
+                  <mu-flex>
+                    <mu-radio value="100" v-model="packagePrice" label="100 Points (50 THB)" color="blue500"></mu-radio>
+                  </mu-flex><br>
+                  <mu-flex>
+                    <mu-radio value="220" v-model="packagePrice" label="220 Points (100 THB)" color="blue500"></mu-radio>
+                  </mu-flex><br>
+                  <mu-flex>
+                    <mu-radio value="350" v-model="packagePrice" label="350 Points (150 THB)" color="blue500"></mu-radio>
+                  </mu-flex><br>
+                  <mu-flex>
+                    <mu-radio value="480" v-model="packagePrice" label="480 Points (200 THB)" color="blue500"></mu-radio>
+                  </mu-flex><br>
+                </mu-col>
+              </mu-row>
+            </mu-container>
+          </div>
+          <mu-button slot="action" flat>Cancel</mu-button>
+          <mu-button slot="action" flat color="blue500">Save</mu-button>
+        </mu-expansion-panel>
       </mu-col>
     </mu-row>
   </mu-container>
@@ -160,6 +238,10 @@
             menuOpen: false,
             isLogin: true,
             userPoints: 400,
+            selectedBank: '',
+            cdCardnum: '',
+            packagePrice: '',
+            topupCard: ''
         })
     }
   })
