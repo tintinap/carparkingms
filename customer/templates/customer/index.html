@@ -141,7 +141,7 @@
   <mu-dialog title="ยืนยันการจองที่จอดรถ?" width="600" max-width="80%" :esc-press-close="false" :overlay-close="false" :open.sync="openConfirm">
     ทำการจองด้วย [[ selectedCar.carid ]] | [[ selectedCar.carbrand ]] เมื่อท่านทำการจองแล้วระบบจะหักPointsของท่านทันทีและไม่สามารถขอคืนPointsได้ ท่านต้องมาถึงจุดแสกนQR Codeภายในเวลา 15 นาที
     <mu-button slot="actions" flat color="grey400" @click="closeConfirmDialog">ยกเลิก</mu-button>
-    <mu-button slot="actions" flat color="amber500" @click="closeConfirmDialog">จอง</mu-button>
+    <mu-button slot="actions" flat color="amber500" @click="CountdownReserve">จอง</mu-button>
   </mu-dialog>
 
     <mu-row style="padding-top: 1em;">
@@ -155,7 +155,7 @@
           <mu-flex justify-content="center">
             <mu-paper :z-depth="3">
               <mu-card-media>
-                <img src="{% static 'images/mockup-qrcode.png' %}">
+                <div id="qrcode"></div>
               </mu-card-media>
             </mu-paper>
           </mu-flex>
@@ -189,11 +189,15 @@
 {#script area#}
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>
 <script src="https://unpkg.com/muse-ui/dist/muse-ui.js"></script>
+<script src="{% static 'js/qrcode.min.js' %}"></script>
 
 <script>
   var app = new Vue({
     delimiters: ['[[', ']]'],
     el: '#indexpage',
+    components: [
+        'qr-code'
+    ],
     data(){
         return({
             docked: false,
@@ -211,6 +215,7 @@
             ],
             selectedCar: {},
             userPoints: 300,
+            isReserve: false,
         })
     },
     methods: {
@@ -222,14 +227,44 @@
       },
       openConfirmDialog (carObj) {
           this.selectedCar = carObj
-        this.openConfirm = true;
+          this.openConfirm = true;
       },
       closeConfirmDialog () {
           this.selectedCar = {}
-        this.openConfirm = false;
+          this.openConfirm = false;
+      },
+      CountdownReserve(){
+          var rand = function() {
+            return Math.random().toString(36).substr(2); // remove `0.`
+          };
+
+          var token = function() {
+            return rand() + rand(); // to make it longer
+          };
+
+          this.selectedCar = {};
+          this.openConfirm = false;
+
+          localStorage.setItem("token_auth", token());
+          window.location.reload(true);
       }
+    },
+    computed: {
+        token_auth(){
+            return localStorage.getItem("token_auth");
+        }
     }
   })
+</script>
+
+<script>
+    let qrcode = new QRCode(document.getElementById("qrcode"), {
+        text: app.token_auth,
+        width: 300,
+        height: 300,
+        colorDark : "#000000",
+        colorLight : "#ffffff",
+    });
 </script>
 
 </body>

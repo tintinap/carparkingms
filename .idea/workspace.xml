@@ -3,15 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="47dc2dee-8875-4ba3-a4d5-36a26a9a201a" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/customer/templates/customer/addcar.html" beforeDir="false" afterPath="$PROJECT_DIR$/customer/templates/customer/addcar.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/customer/templates/customer/buypackage.html" beforeDir="false" afterPath="$PROJECT_DIR$/customer/templates/customer/buypackage.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/customer/templates/customer/changepassword.html" beforeDir="false" afterPath="$PROJECT_DIR$/customer/templates/customer/changepassword.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/customer/templates/customer/editprofile.html" beforeDir="false" afterPath="$PROJECT_DIR$/customer/templates/customer/editprofile.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/customer/templates/customer/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/customer/templates/customer/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/customer/templates/customer/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/customer/templates/customer/login.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/customer/templates/customer/profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/customer/templates/customer/profile.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/customer/templates/customer/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/customer/templates/customer/register.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/customer/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/customer/urls.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -27,8 +19,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/customer/templates/customer/register.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="461">
-              <caret line="199" column="10" lean-forward="true" selection-start-line="199" selection-start-column="10" selection-end-line="199" selection-end-column="10" />
+            <state relative-caret-position="4577">
+              <caret line="199" column="10" selection-start-line="199" selection-start-column="10" selection-end-line="199" selection-end-column="10" />
             </state>
           </provider>
         </entry>
@@ -36,8 +28,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/customer/templates/customer/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
-              <caret line="200" column="25" selection-start-line="200" selection-start-column="25" selection-end-line="200" selection-end-column="25" />
+            <state relative-caret-position="461">
+              <caret line="255" column="5" selection-start-line="255" selection-start-column="5" selection-end-line="255" selection-end-column="5" />
             </state>
           </provider>
         </entry>
@@ -45,7 +37,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/customer/templates/customer/login.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="391">
+            <state relative-caret-position="736">
               <caret line="32" column="76" selection-start-line="32" selection-start-column="27" selection-end-line="32" selection-end-column="76" />
             </state>
           </provider>
@@ -54,7 +46,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/customer/templates/customer/profile.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="300">
+            <state relative-caret-position="5474">
               <caret line="238" column="28" selection-start-line="238" selection-start-column="28" selection-end-line="238" selection-end-column="28" />
             </state>
           </provider>
@@ -93,7 +85,7 @@
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="71" />
+    <option name="x" value="70" />
     <option name="y" value="140" />
     <option name="width" value="1750" />
     <option name="height" value="995" />
@@ -104,6 +96,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -151,11 +144,16 @@
               <item name="static" type="462c0819:PsiDirectoryNode" />
               <item name="images" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="carparkingms" type="b2602c69:ProjectViewProjectNode" />
+              <item name="carparkingms" type="462c0819:PsiDirectoryNode" />
+              <item name="static" type="462c0819:PsiDirectoryNode" />
+              <item name="js" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -221,18 +219,19 @@
       <workItem from="1555553781644" duration="514000" />
       <workItem from="1555656630459" duration="29665000" />
       <workItem from="1555738501278" duration="27780000" />
-      <workItem from="1555822107156" duration="6471000" />
+      <workItem from="1555822107156" duration="8907000" />
+      <workItem from="1555902909179" duration="8605000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="64430000" />
+    <option name="totallyTimeSpent" value="75471000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="23" width="1550" height="848" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25973153" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.26308724" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -276,13 +275,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/customer/templates/customer/payment.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="231">
-          <caret line="129" column="17" lean-forward="true" selection-start-line="63" selection-start-column="2" selection-end-line="129" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/customer/templates/customer/payment.html" />
     <entry file="file://$PROJECT_DIR$/customer/views.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="207">
@@ -328,31 +321,31 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/customer/templates/customer/register.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4577">
+          <caret line="199" column="10" selection-start-line="199" selection-start-column="10" selection-end-line="199" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/customer/templates/customer/login.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
+        <state relative-caret-position="736">
           <caret line="32" column="76" selection-start-line="32" selection-start-column="27" selection-end-line="32" selection-end-column="76" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/customer/templates/customer/profile.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
+        <state relative-caret-position="5474">
           <caret line="238" column="28" selection-start-line="238" selection-start-column="28" selection-end-line="238" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/customer/templates/customer/register.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="461">
-          <caret line="199" column="10" lean-forward="true" selection-start-line="199" selection-start-column="10" selection-end-line="199" selection-end-column="10" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/customer/templates/customer/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="200" column="25" selection-start-line="200" selection-start-column="25" selection-end-line="200" selection-end-column="25" />
+        <state relative-caret-position="461">
+          <caret line="255" column="5" selection-start-line="255" selection-start-column="5" selection-end-line="255" selection-end-column="5" />
         </state>
       </provider>
     </entry>
