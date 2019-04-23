@@ -215,7 +215,9 @@
 {#script area#}
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>
 <script src="https://unpkg.com/muse-ui/dist/muse-ui.js"></script>
-
+<script type='text/javascript'>
+    var user_info = {{user_in|safe}};
+  </script>
 <script>
   var app = new Vue({
     delimiters: ['[[', ']]'],
@@ -224,7 +226,7 @@
         return({
             docked: false,
             menuOpen: false,
-            userPoints: 400,
+            userPoints: user_info[0].point,
             selectedBank: '',
             cdCardnum: '',
             packagePrice: '',

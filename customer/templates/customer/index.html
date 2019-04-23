@@ -15,7 +15,6 @@
   </style>
 </head>
 <body>
-
 <div id="indexpage">
   <header>
     <mu-appbar style="width: 100%;position: fixed;" color="amber500"  z-depth="0">
@@ -28,6 +27,7 @@
     </mu-appbar>
   </header>
   {#sidebar#}
+  {% if user.is_authenticated %}
   <mu-drawer v-if="isLogin" :open.sync="menuOpen" :docked="docked" :right="false">
     <mu-list>
       <mu-list-item button @click="window.location = '{% url 'profile' %}'">
@@ -43,11 +43,14 @@
         <mu-list-item-title >Change Password</mu-list-item-title>
       </mu-list-item>
       <mu-list-item button>
-        <mu-list-item-title style="color: #f44336;">Logout</mu-list-item-title>
+<!--        ลิ้งไปlogout-->
+        <mu-list-item-title style="color: #f44336;" @click="window.location = '{% url 'logout'%}'">Logout</mu-list-item-title>
       </mu-list-item>
     </mu-list>
   </mu-drawer>
-  <mu-drawer v-else :open.sync="menuOpen" :docked="docked" :right="false">
+  {%endif%}
+  {% if not user.is_authenticated %}
+  <mu-drawer :open.sync="menuOpen" :docked="docked" :right="false">
     <mu-list>
       <mu-list-item button @click="window.location = '{% url 'my_login' %}'">
         <mu-list-item-title>Login</mu-list-item-title>
@@ -59,7 +62,7 @@
       </mu-list-item>
     </mu-list>
   </mu-drawer>
-
+  {%endif%}
   {#MainContent#}
   <mu-container fluid="true" style="padding-top: 5em;">
     {#        Parking slotinformation are#}
@@ -103,6 +106,8 @@
         </mu-card>
       </mu-col>
     </mu-row>
+
+    {% if user.is_authenticated %}
 {#    reserve button area#}
     <mu-row v-if="isLogin" style="padding-top: 1em;">
       <mu-col span="12">
@@ -121,7 +126,7 @@
         </mu-flex>
       </mu-col>
     </mu-row>
-
+    {% endif %}
 {#    Car Selector Area#}
     <mu-bottom-sheet :open.sync="isCarSelectorOpen">
     <mu-list @item-click="closeCarSelector">
@@ -131,7 +136,7 @@
         <mu-list-item-action>
           <mu-icon value="directions_car" color="amber500"></mu-icon>
         </mu-list-item-action>
-        <mu-list-item-title>[[ car.carid ]] | [[ car.carbrand ]]</mu-list-item-title>
+        <mu-list-item-title>[[ car.car_license_number ]] | [[ car.car_brand ]]</mu-list-item-title>
       </mu-list-item>
       </div>
     </mu-list>
@@ -189,7 +194,11 @@
 {#script area#}
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>
 <script src="https://unpkg.com/muse-ui/dist/muse-ui.js"></script>
-
+<script type='text/javascript'>
+    var park = {{ parking|safe }};
+    var car_info = {{car_in|safe}};
+    var user_info = {{user_in|safe}};
+  </script>
 <script>
   var app = new Vue({
     delimiters: ['[[', ']]'],
@@ -201,16 +210,13 @@
             isLogin: true,
             isCarSelectorOpen: false,
             openConfirm: false,
-            place: 'คณะเทคโนโลยีสารสนเทศ',
-            availableLots: 12,
-            unavailableLots: 30,
+            place:park[0].name,
+            availableLots: park[0].available,
+            unavailableLots: park[0].capacity-park[0].available,
             expiredTime: '20/08/19 10:07:34',
-            userCar: [
-                {carid: 'บฉ 7476', carbrand: 'Lamborghini', carmodel: 'Centenarion', 'carcolor': 'ส้ม'},
-                {carid: '1กค 3416', carbrand: 'BMW', carmodel: 'i8', 'carcolor': 'ขาว'}
-            ],
+            userCar: car_info,
             selectedCar: {},
-            userPoints: 300,
+            userPoints: user_info[0].point,
         })
     },
     methods: {

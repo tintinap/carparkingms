@@ -52,7 +52,7 @@
   <mu-container fluid="true" style="padding-top: 5em;">
     <mu-row style="padding-top: 1em;">
       <mu-col span="12">
-        <form method="get">
+        <form method="post">
           <mu-flex justify-content="center">
             <mu-flex justify-content="center" ><mu-icon value="person"></mu-icon>แก้ไขข้อมูลผู้ใช้</mu-flex>
           </mu-flex>
@@ -128,7 +128,9 @@
 {#script area#}
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>
 <script src="https://unpkg.com/muse-ui/dist/muse-ui.js"></script>
-
+<script type='text/javascript'>
+    var user_info = {{user_in|safe}};
+  </script>
 <script>
   var app = new Vue({
     delimiters: ['[[', ']]'],
@@ -137,11 +139,11 @@
         return({
             docked: false,
             menuOpen: false,
-            firstname: 'Supakit',
-            lastname: 'Theanthunyakit',
-            username: 'POKINBKK',
-            phone: '0870614656',
-            email: '60070098@kmitl.ac.th'
+            firstname: user_info[0].user_fname,
+            lastname: user_info[0].user_lname,
+            username: user_info[0].username,
+            phone: user_info[0].phone_number,
+            email: user_info[0].email
         })
     }
   })
