@@ -2,9 +2,10 @@ import random
 import json
 
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 
-from customer.models import Parking_zone, User, Register_user, Car
+from customer.models import Parking_zone, Register_user, Car, User_sys
 
 
 def index(request):
@@ -55,6 +56,33 @@ def buypackage(request):
     return render(request, 'customer/buypackage.html',context=context)
 
 def register(request):
+    if request.method == "POST":
+        user = User.objects.create_user(request.POST.get("username"), request.POST.get("email"),request.POST.get("password1"))
+        user.save()
+        user_ob = User_sys.objects.create(
+            user=user,
+            type="re"
+        )
+        regist_user = Register_user.objects.create(
+
+            user_fname=request.POST.get("firstname"),
+            user_lname=request.POST.get("lastname"),
+            username=request.POST.get("username"),
+            password=request.POST.get("password1"),
+            phone_number=request.POST.get("phone"),
+            email=request.POST.get("email"),
+            point=0,
+            user=User_sys.objects.get(user_id=user.id)
+        )
+        car_ob = Car.objects.create(
+            car_license_number=request.POST.get("carid"),
+            car_brand=request.POST.get("carbrand"),
+            car_model=request.POST.get("carmodel"),
+            car_color=request.POST.get("carcolor"),
+            register_user=regist_user
+        )
+        return redirect('index')
+
     return render(request, 'customer/register.html')
 
 def profile(request):

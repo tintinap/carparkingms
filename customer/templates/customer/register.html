@@ -45,7 +45,8 @@
   <mu-container fluid="true" style="padding-top: 5em;">
     <mu-row style="padding-top: 1em;">
       <mu-col span="12">
-        <form method="get">
+        <form method="post" action="{% url 'register' %}">
+          {% csrf_token %}
           <mu-flex justify-content="center">
             <mu-flex justify-content="center" ><mu-icon value="person"></mu-icon>ข้อมูลส่วนตัวผู้ใช้</mu-flex>
           </mu-flex>

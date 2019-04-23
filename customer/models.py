@@ -28,7 +28,7 @@ class Reservation(models.Model):
     reserve_token = models.CharField(max_length=64)
     reserve_at = models.DateField()
 
-class User(models.Model):
+class User_sys(models.Model):
     user = models.OneToOneField('auth.User', on_delete=models.CASCADE)
     TYPES = (
         ('re', 'register_user'),
@@ -44,7 +44,7 @@ class Register_user(models.Model):
     phone_number = models.CharField(max_length=10)
     email = models.EmailField()
     point = models.IntegerField()
-    user = models.ForeignKey(User, models.PROTECT)
+    user = models.ForeignKey(User_sys, models.PROTECT)
 
     def __str__(self):
         return self.user_fname
