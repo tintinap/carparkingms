@@ -42,7 +42,7 @@
       <mu-list-item button @click="window.location = '{% url 'change_password' %}'">
         <mu-list-item-title >Change Password</mu-list-item-title>
       </mu-list-item>
-      <mu-list-item button>
+      <mu-list-item button @click="window.location = '{% url 'logout' %}'">
         <mu-list-item-title style="color: #f44336;">Logout</mu-list-item-title>
       </mu-list-item>
     </mu-list>
@@ -203,7 +203,6 @@
       </mu-col>
     </mu-row><br/>
   </mu-container>
-  <h1>[[user_info]]</h1>
 
 {#  footer area#}
 {#  <footer style="width: 100%;height: 5em;background-color: #ffc107;margin-top: 1em;bottom: 0;">#}

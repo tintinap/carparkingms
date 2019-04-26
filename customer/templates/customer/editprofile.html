@@ -42,7 +42,7 @@
       <mu-list-item button @click="window.location = '{% url 'change_password' %}'">
         <mu-list-item-title >Change Password</mu-list-item-title>
       </mu-list-item>
-      <mu-list-item button>
+      <mu-list-item button @click="window.location = '{% url 'logout' %}'">
         <mu-list-item-title style="color: #f44336;">Logout</mu-list-item-title>
       </mu-list-item>
     </mu-list>
@@ -52,27 +52,28 @@
   <mu-container fluid="true" style="padding-top: 5em;">
     <mu-row style="padding-top: 1em;">
       <mu-col span="12">
-        <form method="post">
+        <form method="post" action="{% url 'edit_profile' %}">
+          {% csrf_token %}
           <mu-flex justify-content="center">
             <mu-flex justify-content="center" ><mu-icon value="person"></mu-icon>แก้ไขข้อมูลผู้ใช้</mu-flex>
           </mu-flex>
           <mu-text-field
             label-float
-            name="firstname"
+            name="{{form.firstname.label}}"
             v-model="firstname"
             color="amber600"
             full-width label="ชื่อจริง">
           </mu-text-field><br/>
           <mu-text-field
             label-float
-            name="lastname"
+            name="{{form.lastname.label}}"
             v-model="lastname"
             color="amber600"
             full-width label="นามสกุล">
           </mu-text-field><br/>
           <mu-text-field
             label-float
-            :value="username"
+            :value="{{form.username.label}}"
             v-model="username"
             name="username"
             color="amber600"
@@ -80,7 +81,7 @@
           </mu-text-field><br/>
           <mu-text-field
             label-float
-            name="email"
+            name="{{form.email.label}}"
             v-model="email"
             color="amber600"
             full-width label="Email"
@@ -88,7 +89,7 @@
           </mu-text-field><br/>
           <mu-text-field
             label-float
-            name="phone"
+            name="{{form.phone.label}}"
             v-model="phone"
             color="amber600"
             full-width label="เบอร์โทรศัพท์"

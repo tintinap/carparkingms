@@ -42,9 +42,8 @@
       <mu-list-item button @click="window.location = '{% url 'change_password' %}'">
         <mu-list-item-title >Change Password</mu-list-item-title>
       </mu-list-item>
-      <mu-list-item button>
-<!--        ลิ้งไปlogout-->
-        <mu-list-item-title style="color: #f44336;" @click="window.location = '{% url 'logout'%}'">Logout</mu-list-item-title>
+      <mu-list-item button @click="window.location = '{% url 'logout' %}'">
+        <mu-list-item-title style="color: #f44336;">Logout</mu-list-item-title>
       </mu-list-item>
     </mu-list>
   </mu-drawer>

@@ -45,7 +45,11 @@
   </mu-drawer>
 
   {#MainContent#}
+
+
   <mu-container fluid="true" style="padding-top: 5em;">
+    {{form}}
+    {{form.username.label}}
     <mu-row style="padding-top: 2em;">
       <mu-col span="12">
         <mu-flex justify-content="center">
@@ -62,7 +66,7 @@
           <mu-text-field
             :value="username"
             v-model.lazy="username"
-            name="username"
+            name="{{form.username.label}}"
             color="amber600"
             icon="account_circle"
             full-width label="ชื่อผู้ใช้"
@@ -71,10 +75,8 @@
           <mu-text-field
             :value="password"
             v-model.lazy="password"
-            :action-icon="passVisibility ? 'visibility_off' : 'visibility'"
-            :action-click="() => (passVisibility = !passVisibility)"
-            :type="passVisibility ? 'text' : 'password'"
-            name="password"
+            type="password"
+            name="{{form.password.label}}"
             color="amber600"
             icon="locked"
             full-width label="รหัสผ่าน"

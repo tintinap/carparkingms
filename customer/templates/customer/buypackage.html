@@ -42,7 +42,7 @@
       <mu-list-item button @click="window.location = '{% url 'change_password' %}'">
         <mu-list-item-title >Change Password</mu-list-item-title>
       </mu-list-item>
-      <mu-list-item button>
+      <mu-list-item button @click="window.location = '{% url 'logout' %}'">
         <mu-list-item-title style="color: #f44336;">Logout</mu-list-item-title>
       </mu-list-item>
     </mu-list>
@@ -75,6 +75,7 @@
     </mu-row>
   </mu-container>
 
+
   <mu-container fluid="true" style="padding-top: 1em;">
     <mu-row style="padding-bottom: 5px;">
       <mu-col>
@@ -85,6 +86,8 @@
     </mu-row>
     <mu-row>
       <mu-col span="12">
+        <form method="post" action="{% url 'buy_package' %}">
+    {% csrf_token %}
         <mu-expansion-panel>
           <div slot="header">
             <mu-flex align-items="center">
@@ -129,24 +132,27 @@
               <mu-row>
                 <mu-col span="12">
                   <mu-flex>
-                    <mu-radio value="100" v-model="packagePrice" label="100 Points (50 THB)" color="pink500"></mu-radio>
+                    <mu-radio name="point" value="100" v-model="packagePrice" label="100 Points (50 THB)" color="pink500"></mu-radio>
                   </mu-flex><br>
                   <mu-flex>
-                    <mu-radio value="220" v-model="packagePrice" label="220 Points (100 THB)" color="pink500"></mu-radio>
+                    <mu-radio name="point" value="220" v-model="packagePrice" label="220 Points (100 THB)" color="pink500"></mu-radio>
                   </mu-flex><br>
                   <mu-flex>
-                    <mu-radio value="350" v-model="packagePrice" label="350 Points (150 THB)" color="pink500"></mu-radio>
+                    <mu-radio name="point" value="350" v-model="packagePrice" label="350 Points (150 THB)" color="pink500"></mu-radio>
                   </mu-flex><br>
                   <mu-flex>
-                    <mu-radio value="480" v-model="packagePrice" label="480 Points (200 THB)" color="pink500"></mu-radio>
+                    <mu-radio name="point" value="480" v-model="packagePrice" label="480 Points (200 THB)" color="pink500"></mu-radio>
                   </mu-flex><br>
                 </mu-col>
               </mu-row>
             </mu-container>
           </div>
-          <mu-button slot="action" flat>Cancel</mu-button>
-          <mu-button slot="action" flat color="pink500">Confirm</mu-button>
+          <mu-button slot="action" flat @click="window.location = '{% url 'buy_package' %}'">Cancel</mu-button>
+          <mu-button type="submit" slot="action" flat color="pink500">Confirm</mu-button>
         </mu-expansion-panel>
+        </form>
+        <form method="post" action="{% url 'buy_package' %}">
+    {% csrf_token %}
         <mu-expansion-panel>
           <div slot="header">
             <mu-flex align-items="center">
@@ -169,24 +175,25 @@
               <mu-row>
                 <mu-col span="12">
                   <mu-flex>
-                    <mu-radio value="100" v-model="packagePrice" label="100 Points (50 THB)" color="blue500"></mu-radio>
+                    <mu-radio name="point" value="100" v-model="packagePrice" label="100 Points (50 THB)" color="blue500"></mu-radio>
                   </mu-flex><br>
                   <mu-flex>
-                    <mu-radio value="220" v-model="packagePrice" label="220 Points (100 THB)" color="blue500"></mu-radio>
+                    <mu-radio name="point" value="220" v-model="packagePrice" label="220 Points (100 THB)" color="blue500"></mu-radio>
                   </mu-flex><br>
                   <mu-flex>
-                    <mu-radio value="350" v-model="packagePrice" label="350 Points (150 THB)" color="blue500"></mu-radio>
+                    <mu-radio name="point" value="350" v-model="packagePrice" label="350 Points (150 THB)" color="blue500"></mu-radio>
                   </mu-flex><br>
                   <mu-flex>
-                    <mu-radio value="480" v-model="packagePrice" label="480 Points (200 THB)" color="blue500"></mu-radio>
+                    <mu-radio name="point" value="480" v-model="packagePrice" label="480 Points (200 THB)" color="blue500"></mu-radio>
                   </mu-flex><br>
                 </mu-col>
               </mu-row>
             </mu-container>
           </div>
-          <mu-button slot="action" flat>Cancel</mu-button>
-          <mu-button slot="action" flat color="blue500">Confirm</mu-button>
+          <mu-button slot="action" flat @click="window.location = '{% url 'buy_package' %}'">Cancel</mu-button>
+          <mu-button type="submit" slot="action" flat color="blue500">Confirm</mu-button>
         </mu-expansion-panel>
+        </form>
       </mu-col>
     </mu-row>
   </mu-container>

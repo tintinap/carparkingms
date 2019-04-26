@@ -43,6 +43,9 @@
 
   {#MainContent#}
   <mu-container fluid="true" style="padding-top: 5em;">
+{% if form_user.non_field_errors %}
+        <p>{{form_user.non_field_errors}}</p>
+        {% endif %}
     <mu-row style="padding-top: 1em;">
       <mu-col span="12">
         <form method="post" action="{% url 'register' %}">
@@ -50,63 +53,75 @@
           <mu-flex justify-content="center">
             <mu-flex justify-content="center" ><mu-icon value="person"></mu-icon>ข้อมูลส่วนตัวผู้ใช้</mu-flex>
           </mu-flex>
+          {{form_user.firstname.errors}}
           <mu-text-field
             label-float
-            name="firstname"
+            name="{{form_user.firstname.label}}"
             v-model.lazy="firstname"
             color="amber600"
             full-width label="ชื่อจริง">
           </mu-text-field><br/>
+          {{form_user.lastname.errors}}
           <mu-text-field
             label-float
-            name="lastname"
+            name="{{form_user.lastname.label}}"
             v-model.lazy="lastname"
             color="amber600"
             full-width label="นามสกุล">
           </mu-text-field><br/>
+          <table>
+            <tr>
+              <td>{{form_user.email.errors}}</td>
+            </tr>
+          </table>
           <mu-text-field
             label-float
-            name="email"
+            name="{{form_user.email.label}}"
             v-model.lazy="email"
             color="amber600"
             full-width label="Email"
             suffix="@kmitl.ac.th">
           </mu-text-field><br/>
+          {{form_user.phone.errors}}
           <mu-text-field
             label-float
             name="phone"
-            v-model.lazy="phone"
+            v-model.lazy="{{form_user.phone.label}}"
             color="amber600"
             full-width label="เบอร์โทรศัพท์"
-            type="number">
+            type="text">
           </mu-text-field><br/>
           <mu-flex justify-content="center">
             <mu-flex justify-content="center" ><mu-icon value="directions_car"></mu-icon>ข้อมูลรถยนต์ผู้ใช้</mu-flex>
           </mu-flex>
+          {{form_user.carid.errors}}
           <mu-text-field
             label-float
-            name="carid"
+            name="{{form_user.carid.label}}"
             v-model.lazy="carid"
             color="amber600"
             full-width label="ทะเบียนรถ">
           </mu-text-field><br/>
+          {{form_user.carbrand.errors}}
           <mu-text-field
             label-float
-            name="carbrand"
+            name="{{form_user.carbrand.label}}"
             v-model.lazy="carbrand"
             color="amber600"
             full-width label="ยี่ห้อ">
           </mu-text-field><br/>
+          {{form_user.carmodel.errors}}
           <mu-text-field
             label-float
-            name="carmodel"
+            name="{{form_user.carmodel.label}}"
             v-model.lazy="carmodel"
             color="amber600"
             full-width label="รุ่น">
           </mu-text-field><br/>
+          {{form_user.carcolor.errors}}
           <mu-text-field
             label-float
-            name="carcolor"
+            name="{{form_user.carcolor.label}}"
             v-model.lazy="carcolor"
             color="amber600"
             full-width label="สี">
@@ -114,29 +129,30 @@
           <mu-flex justify-content="center">
             <mu-flex justify-content="center" ><mu-icon value="visibility"></mu-icon>ชื่อผู้ใช้และรหัสผ่าน</mu-flex>
           </mu-flex>
+          {{form_user.username.errors}}
           <mu-text-field
             label-float
-            v-model.lazy="username"
+            v-model.lazy="{{form_user.username.label}}"
             name="username"
             color="amber600"
             full-width label="ชื่อผู้ใช้">
           </mu-text-field><br/>
+          {{form_user.password1.errors}}
           <mu-text-field
             label-float
-            v-model.lazy="password1"
+            v-model.lazy="{{form_user.password1.label}}"
             name="password1"
             color="amber600"
             type="password"
             full-width label="รหัสผ่าน">
           </mu-text-field><br/>
+          {{form_user.password2.errors}}
           <mu-text-field
             label-float
             v-model.lazy="password2"
-            name="password2"
+            name="{{form_user.password2.label}}"
             color="amber600"
-            :action-icon="passVisibility ? 'visibility_off' : 'visibility'"
-            :action-click="() => (passVisibility = !passVisibility)"
-            :type="passVisibility ? 'text' : 'password'"
+            type="password"
             full-width label="ยืนยันรหัสผ่าน">
           </mu-text-field><br/>
           <mu-flex >
