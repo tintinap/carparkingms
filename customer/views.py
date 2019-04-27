@@ -2,6 +2,7 @@ import random
 import json
 
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 
@@ -57,6 +58,7 @@ def my_login(request):
     print(form)
     return render(request, 'customer/login.html',context=context)
 
+@login_required
 def buypackage(request):
     id = request.user.id
     u = list(User_sys.objects.filter(user_id=id).values())
@@ -109,6 +111,7 @@ def register(request):
     }
     return render(request, 'customer/register.html',context=context)
 
+@login_required
 def profile(request):
     id = request.user.id
     u = list(User_sys.objects.filter(user_id=id).values())
@@ -120,6 +123,7 @@ def profile(request):
     }
     return render(request, 'customer/profile.html',context=context)
 
+@login_required
 def editprofile(request):
     form = Editprofileform()
     id = request.user.id
@@ -148,6 +152,7 @@ def editprofile(request):
     }
     return render(request, 'customer/editprofile.html',context=context)
 
+@login_required
 def addcar(request):
     form = Addcarform()
     print(1)
@@ -173,6 +178,7 @@ def addcar(request):
     }
     return render(request, 'customer/addcar.html',context=context)
 
+@login_required
 def changepassword(request):
     error = ''
     if request.method == "POST":
@@ -202,6 +208,7 @@ def changepassword(request):
                'error': error}
     return render(request, 'customer/changepassword.html',context=context)
 
+@login_required
 def my_logout(requset):
 	logout(requset)
 	return redirect('index')
