@@ -139,6 +139,8 @@ def editprofile(request):
             us.username = form.cleaned_data.get('username')
             regist.save()
             us.save()
+            return redirect('profile')
+
 
     context = {
         'user_in': user,

@@ -79,6 +79,7 @@
             color="amber600"
             full-width label="ชื่อผู้ใช้">
           </mu-text-field><br/>
+          {{form.email.errors}}
           <mu-text-field
             label-float
             name="{{form.email.label}}"
@@ -87,6 +88,7 @@
             full-width label="Email"
             suffix="@kmitl.ac.th">
           </mu-text-field><br/>
+          {{form.phone.errors}}
           <mu-text-field
             label-float
             name="{{form.phone.label}}"
