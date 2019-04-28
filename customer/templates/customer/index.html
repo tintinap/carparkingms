@@ -111,11 +111,12 @@
     <mu-row v-if="isLogin" style="padding-top: 1em;">
       <mu-col span="12">
         <mu-flex justify-content="center" align-items="center">
-          <mu-button full-width color="amber500" large @click="openCarSelector">Reserve (50 Points)<mu-icon right value="schedule"></mu-icon></mu-button>
+          <mu-button full-width color="amber500" large @click="openCarSelector">Reserve<mu-icon right value="schedule"></mu-icon></mu-button>
         </mu-flex>
       </mu-col>
     </mu-row>
-
+  {% endif %}
+  {% if not user.is_authenticated %}
     <mu-row v-else style="padding-top: 1em;">
       <mu-col span="12">
         <mu-flex justify-content="center" align-items="center">
