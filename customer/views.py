@@ -77,24 +77,16 @@ def buypackage(request):
 def register(request):
     form_user = UsernameForm()
     if request.method == "POST":
-        print(2)
         form_user = UsernameForm(request.POST)
         if form_user.is_valid():
-            print(3)
-            user = User.objects.create_user(form_user.cleaned_data.get("username"), form_user.cleaned_data.get("email"),form_user.cleaned_data.get("password1"))
+            user = User.objects.create_user(username=form_user.cleaned_data.get("username"),firstname=form_user.cleaned_data.get("firstname"),lastname=form_user.cleaned_data.get("lastname"), email=form_user.cleaned_data.get("email"),password=form_user.cleaned_data.get("password1"))
             user.save()
             user_ob = User_sys.objects.create(
                 user=user,
                 type="re"
             )
             regist_user = Register_user.objects.create(
-
-                user_fname=form_user.cleaned_data.get("firstname"),
-                user_lname=form_user.cleaned_data.get("lastname"),
-                username=form_user.cleaned_data.get("username"),
-                password=form_user.cleaned_data.get("password1"),
                 phone_number=form_user.cleaned_data.get("phone"),
-                email=form_user.cleaned_data.get("email"),
                 point=0,
                 user=User_sys.objects.get(user_id=user.id)
             )
@@ -114,10 +106,15 @@ def register(request):
 @login_required
 def profile(request):
     id = request.user.id
+    user_in = list(User.objects.filter(id=id).values())
+    print(1)
+    print(user_in)
+    print(user_in[0]["first_name"])
     u = list(User_sys.objects.filter(user_id=id).values())
     user = list(Register_user.objects.filter(user_id=u[0]['id']).values())
     car = list(Car.objects.filter(register_user_id=user[0]["id"]).values())
     context = {
+        'user_u':user_in,
         'user_in':user,
         'car_in':car
     }
@@ -127,6 +124,7 @@ def profile(request):
 def editprofile(request):
     form = Editprofileform()
     id = request.user.id
+    user_in = list(User.objects.filter(id=id).values())
     us = User.objects.get(id=id)
     u = User_sys.objects.get(user_id=id)
     user = list(Register_user.objects.filter(user_id=u.id).values())
@@ -135,10 +133,9 @@ def editprofile(request):
         if form.is_valid():
             regist = Register_user.objects.get(user_id=u.id)
 
-            regist.username = form.cleaned_data.get('username')
-            regist.email = form.cleaned_data.get('email')
-            regist.user_fname = form.cleaned_data.get('firstname')
-            regist.user_lname = form.cleaned_data.get('lastname')
+            us.email = form.cleaned_data.get('email')
+            us.first_name = form.cleaned_data.get('firstname')
+            us.last_name = form.cleaned_data.get('lastname')
             regist.phone_number = form.cleaned_data.get('phone')
             us.username = form.cleaned_data.get('username')
             regist.save()
@@ -147,6 +144,7 @@ def editprofile(request):
 
 
     context = {
+        'user_u':user_in,
         'user_in': user,
         'form':form
     }
@@ -155,16 +153,12 @@ def editprofile(request):
 @login_required
 def addcar(request):
     form = Addcarform()
-    print(1)
-    print(request.method)
     if request.method == "POST":
-        print(2)
         id = request.user.id
         u = User_sys.objects.get(user_id=id)
         user = Register_user.objects.get(user_id=u.id)
         form_user = Addcarform(request.POST)
         if form_user.is_valid():
-            print(3)
             car_ob = Car.objects.create(
                 car_license_number=form_user.cleaned_data.get("carid"),
                 car_brand=form_user.cleaned_data.get("carbrand"),
@@ -187,15 +181,10 @@ def changepassword(request):
             print(3)
             id = request.user.id
             us = User.objects.get(id=id)
-            u = User_sys.objects.get(user_id=id)
             print(us.check_password(form.cleaned_data.get("oldpassword")))
             if us.check_password(form.cleaned_data.get("oldpassword")):
-                print(1)
-                regist = Register_user.objects.get(user_id=u.id)
-                regist.password = form.cleaned_data.get("newpassword1")
                 us.set_password(form.cleaned_data.get("newpassword1"))
                 us.save()
-                regist.save()
                 return redirect('index')
             else:
                 error = "old pass didn't match"
