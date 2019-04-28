@@ -104,7 +104,7 @@
       </mu-col>
     </mu-row>
 {#    reserve button area#}
-    <mu-row v-if="isLogin" style="padding-top: 1em;">
+    <mu-row v-if="isLogin && !isReserve" style="padding-top: 1em;">
       <mu-col span="12">
         <mu-flex justify-content="center" align-items="center">
           <mu-button full-width color="amber500" large @click="openCarSelector">Reserve <mu-icon right value="schedule"></mu-icon></mu-button>
@@ -112,12 +112,10 @@
       </mu-col>
     </mu-row>
 
-    <mu-row v-else style="padding-top: 1em;">
+    <mu-row v-if="isReserve || !isLogin" style="padding-top: 1em;">
       <mu-col span="12">
         <mu-flex justify-content="center" align-items="center">
-          <mu-tooltip content="กรุณาเข้าสู่ระบบ">
-            <mu-button full-width color="success" large disabled>Reserve <mu-icon right value="schedule"></mu-icon></mu-button>
-          </mu-tooltip>
+          <mu-button full-width color="success" large disabled>Reserve <mu-icon right value="schedule"></mu-icon></mu-button>
         </mu-flex>
       </mu-col>
     </mu-row>
@@ -169,7 +167,7 @@
     <mu-button slot="actions" flat color="amber500" @click="CountdownReserve">จอง</mu-button>
   </mu-dialog>
 
-    <mu-row style="padding-top: 1em;">
+    <mu-row style="padding-top: 1em;" v-if="isReserve">
       <mu-col span="12">
         <mu-card>
           <mu-card-header title="QR Code" sub-title="กรุณาแสกนQR Codeทุกครั้ง">
@@ -187,7 +185,28 @@
           <mu-card-title :title="'Expired Time: '+expiredTime" sub-title="กรุณาแสกนQR Codeก่อนหมดเวลาในการจอง"></mu-card-title>
         </mu-card>
       </mu-col>
-    </mu-row><br/>
+    </mu-row>
+
+    <mu-row v-if="!isReserve" style="padding-top: 1em;">
+      <mu-col span="12">
+        <mu-card>
+          <mu-card-header title="QR Code" sub-title="กรุณาแสกนQR Codeทุกครั้ง">
+            <mu-avatar slot="avatar" color="amber500">
+              <mu-icon left value="fullscreen"></mu-icon>
+            </mu-avatar>
+          </mu-card-header>
+          <mu-flex justify-content="center">
+            <mu-paper :z-depth="3">
+              <mu-card-media>
+                <div id="qrcode"></div>
+              </mu-card-media>
+            </mu-paper>
+          </mu-flex>
+          <mu-card-title></mu-card-title>
+        </mu-card>
+      </mu-col>
+    </mu-row>
+    <br/>
   </mu-container>
 
 {#  footer area#}
@@ -241,11 +260,11 @@
             userPoints: 300,
             reserveLimitTime: {min: '15', point: '50'},
             options:[
+                {min: '1', point: '50'},
                 {min: '15', point: '50'},
                 {min: '30', point: '100'},
                 {min: '60', point: '200'}
             ],
-            isReserve: false,
             openLimitTime: false
         })
     },
@@ -310,7 +329,11 @@
           this.selectedCar = {};
           this.openConfirm = false;
 
+          //Reserve Information Here
           localStorage.setItem("token_auth", JSON.stringify(reserveInfo));
+
+          //ReserveState Here
+          localStorage.setItem("isReserve", JSON.stringify(true));
           window.location.reload(true);
       }
     },
@@ -322,6 +345,30 @@
         expiredTime(){
             var expiredTime = JSON.parse(localStorage.getItem("token_auth")).expiredTime
             return expiredTime;
+        },
+        isReserve() {
+
+            //getTime
+            var today = new Date();
+            var date = today.getDate()+'/'+(today.getMonth()+1)+'/'+today.getFullYear();
+            var time = ((JSON.stringify(today.getHours())).length == 2 ? JSON.stringify(today.getHours()) : '0'+JSON.stringify(today.getHours())) + ":"
+              + ((JSON.stringify(today.getMinutes())).length == 2 ? JSON.stringify(today.getMinutes()) : '0'+JSON.stringify(today.getMinutes())) + ":"
+              + ((JSON.stringify(today.getSeconds())).length == 2 ? JSON.stringify(today.getSeconds()) : '0'+JSON.stringify(today.getSeconds()));
+            var dateTime = date+' '+time;
+
+            var reserveState = false;
+            if(localStorage.getItem("token_auth") == ""){
+                reserveState = false;
+            }
+            else{
+                if(JSON.parse(localStorage.getItem("token_auth")).expiredTime < dateTime){
+                    localStorage.setItem("isReserve", JSON.stringify(false));
+                    reserveState = false;
+                } else {
+                    reserveState = true;
+                }
+            }
+            return reserveState;
         }
     }
   })
