@@ -107,7 +107,7 @@
     <mu-row v-if="isLogin" style="padding-top: 1em;">
       <mu-col span="12">
         <mu-flex justify-content="center" align-items="center">
-          <mu-button full-width color="amber500" large @click="openCarSelector">Reserve (50 Points)<mu-icon right value="schedule"></mu-icon></mu-button>
+          <mu-button full-width color="amber500" large @click="openCarSelector">Reserve <mu-icon right value="schedule"></mu-icon></mu-button>
         </mu-flex>
       </mu-col>
     </mu-row>
@@ -116,7 +116,7 @@
       <mu-col span="12">
         <mu-flex justify-content="center" align-items="center">
           <mu-tooltip content="กรุณาเข้าสู่ระบบ">
-            <mu-button full-width color="success" large disabled>Reserve (50 Points)<mu-icon right value="schedule"></mu-icon></mu-button>
+            <mu-button full-width color="success" large disabled>Reserve <mu-icon right value="schedule"></mu-icon></mu-button>
           </mu-tooltip>
         </mu-flex>
       </mu-col>
@@ -127,7 +127,7 @@
     <mu-list @item-click="closeCarSelector">
       <mu-sub-header>กรุณาเลือกรถของท่าน</mu-sub-header>
       <div v-for="car in userCar">
-      <mu-list-item button @click="openConfirmDialog(car)">
+      <mu-list-item button @click="openLimitTimeDialog(car)">
         <mu-list-item-action>
           <mu-icon value="directions_car" color="amber500"></mu-icon>
         </mu-list-item-action>
@@ -137,9 +137,34 @@
     </mu-list>
   </mu-bottom-sheet>
 
+{#    alert select Time Area#}
+  <mu-dialog
+    title="Select Limit Time"
+    width="600"
+    max-width="80%"
+    scrollable
+    :open.sync="openLimitTime"
+  >
+    <mu-list>
+      <mu-list-item :key="option.min" v-for="option in options">
+        <mu-list-item-content>
+          <mu-radio color="amber500" :label="option.min + ' นาที ( ' + option.point + ' points )'" :value="option" v-model="reserveLimitTime"></mu-radio>
+        </mu-list-item-content>
+      </mu-list-item>
+    </mu-list>
+    <mu-button slot="actions" flat color="amber500" @click="openConfirmDialog()">ok</mu-button>
+  </mu-dialog>
 {#    alert dialog befor reserve area#}
-  <mu-dialog title="ยืนยันการจองที่จอดรถ?" width="600" max-width="80%" :esc-press-close="false" :overlay-close="false" :open.sync="openConfirm">
-    ทำการจองด้วย [[ selectedCar.carid ]] | [[ selectedCar.carbrand ]] เมื่อท่านทำการจองแล้วระบบจะหักPointsของท่านทันทีและไม่สามารถขอคืนPointsได้ ท่านต้องมาถึงจุดแสกนQR Codeภายในเวลา 15 นาที
+  <mu-dialog
+    title="ยืนยันการจองที่จอดรถ?"
+    width="600"
+    max-width="80%"
+    :esc-press-close="false"
+    :overlay-close="false"
+    :open.sync="openConfirm">
+    ทำการจองด้วย <b>[[ selectedCar.carid ]] | [[ selectedCar.carbrand ]]</b>
+    เมื่อท่านทำการจองแล้วระบบจะหักPointsของท่านทันทีและไม่สามารถขอคืนPointsได้
+    ท่านต้องมาถึงจุดแสกนQR Codeภายในเวลา <b>[[ reserveLimitTime.min ]]</b> นาที
     <mu-button slot="actions" flat color="grey400" @click="closeConfirmDialog">ยกเลิก</mu-button>
     <mu-button slot="actions" flat color="amber500" @click="CountdownReserve">จอง</mu-button>
   </mu-dialog>
@@ -208,14 +233,21 @@
             place: 'คณะเทคโนโลยีสารสนเทศ',
             availableLots: 12,
             unavailableLots: 30,
-            expiredTime: '20/08/19 10:07:34',
+            expiredTime: '',
             userCar: [
                 {carid: 'บฉ 7476', carbrand: 'Lamborghini', carmodel: 'Centenarion', 'carcolor': 'ส้ม'},
                 {carid: '1กค 3416', carbrand: 'BMW', carmodel: 'i8', 'carcolor': 'ขาว'}
             ],
             selectedCar: {},
             userPoints: 300,
+            reserveLimitTime: {min: '15', point: '50'},
+            options:[
+                {min: '15', point: '50'},
+                {min: '30', point: '100'},
+                {min: '60', point: '200'}
+            ],
             isReserve: false,
+            openLimitTime: false
         })
     },
     methods: {
@@ -225,12 +257,20 @@
       openCarSelector () {
         this.isCarSelectorOpen = true;
       },
-      openConfirmDialog (carObj) {
+      openLimitTimeDialog (carObj) {
           this.selectedCar = carObj
+          this.openLimitTime = true;
+      },
+      closeLimitTimeDialog () {
+          this.selectedCar = {}
+          this.openLimitTime = false;
+      },
+      openConfirmDialog () {
+          console.log(this.reserveLimitTime)
           this.openConfirm = true;
       },
       closeConfirmDialog () {
-          this.selectedCar = {}
+          this.reserveLimitTime = {min: '15', point: '50'};
           this.openConfirm = false;
       },
       CountdownReserve(){
@@ -239,7 +279,7 @@
           };
 
           var token = function() {
-            return rand() + rand(); // to make it longer
+            return rand() + rand() + rand() + rand(); // to make it longer
           };
 
           this.selectedCar = {};
