@@ -42,7 +42,7 @@
       <mu-list-item button @click="window.location = '{% url 'change_password' %}'">
         <mu-list-item-title >Change Password</mu-list-item-title>
       </mu-list-item>
-      <mu-list-item button>
+      <mu-list-item button @click="window.location = '{% url 'logout' %}'">
         <mu-list-item-title style="color: #f44336;">Logout</mu-list-item-title>
       </mu-list-item>
     </mu-list>
@@ -52,34 +52,35 @@
   <mu-container fluid="true" style="padding-top: 5em;">
     <mu-row style="padding-top: 1em;">
       <mu-col span="12">
-        <form method="get">
+        <form method="post" action="{% url 'add_car' %}">
+          {% csrf_token %}
           <mu-flex justify-content="center">
             <mu-flex justify-content="center" ><mu-icon value="directions_car"></mu-icon>เพิ่มรถยนต์</mu-flex>
           </mu-flex>
           <mu-text-field
             label-float
-            name="carid"
+            name="{{form.carid.label}}"
             v-model.lazy="carid"
             color="amber600"
             full-width label="ทะเบียนรถ">
           </mu-text-field><br/>
           <mu-text-field
             label-float
-            name="carbrand"
+            name="{{form.carbrand.label}}"
             v-model.lazy="carbrand"
             color="amber600"
             full-width label="ยี่ห้อ">
           </mu-text-field><br/>
           <mu-text-field
             label-float
-            name="carmodel"
+            name="{{form.carmodel.label}}"
             v-model.lazy="carmodel"
             color="amber600"
             full-width label="รุ่น">
           </mu-text-field><br/>
           <mu-text-field
             label-float
-            name="carcolor"
+            name="{{form.carcolor.label}}"
             v-model.lazy="carcolor"
             color="amber600"
             full-width label="สี">
