@@ -233,7 +233,6 @@
             place: 'คณะเทคโนโลยีสารสนเทศ',
             availableLots: 12,
             unavailableLots: 30,
-            expiredTime: '',
             userCar: [
                 {carid: 'บฉ 7476', carbrand: 'Lamborghini', carmodel: 'Centenarion', 'carcolor': 'ส้ม'},
                 {carid: '1กค 3416', carbrand: 'BMW', carmodel: 'i8', 'carcolor': 'ขาว'}
@@ -266,14 +265,17 @@
           this.openLimitTime = false;
       },
       openConfirmDialog () {
-          console.log(this.reserveLimitTime)
           this.openConfirm = true;
+          this.openLimitTime = false;
       },
       closeConfirmDialog () {
           this.reserveLimitTime = {min: '15', point: '50'};
           this.openConfirm = false;
+          this.openLimitTime = false;
       },
       CountdownReserve(){
+
+          //create tiken area
           var rand = function() {
             return Math.random().toString(36).substr(2); // remove `0.`
           };
@@ -282,16 +284,44 @@
             return rand() + rand() + rand() + rand(); // to make it longer
           };
 
+          //timestamp
+          var today = new Date();
+          var date = today.getDate()+'/'+(today.getMonth()+1)+'/'+today.getFullYear();
+          var time = ((JSON.stringify(today.getHours())).length == 2 ? JSON.stringify(today.getHours()) : '0'+JSON.stringify(today.getHours())) + ":"
+              + ((JSON.stringify(today.getMinutes())).length == 2 ? JSON.stringify(today.getMinutes()) : '0'+JSON.stringify(today.getMinutes())) + ":"
+              + ((JSON.stringify(today.getSeconds())).length == 2 ? JSON.stringify(today.getSeconds()) : '0'+JSON.stringify(today.getSeconds()));
+          var dateTime = date+' '+time;
+
+          //Add minute Function
+          function addMinutes(date, minutes) {
+            var added = new Date(date.getTime() + minutes*60000)
+            var addedDate = added.getDate()+'/'+(added.getMonth()+1)+'/'+added.getFullYear();
+            var addedTime = ((JSON.stringify(added.getHours())).length == 2 ? JSON.stringify(added.getHours()) : '0'+JSON.stringify(added.getHours())) + ":"
+              + ((JSON.stringify(added.getMinutes())).length == 2 ? JSON.stringify(added.getMinutes()) : '0'+JSON.stringify(added.getMinutes())) + ":"
+              + ((JSON.stringify(added.getSeconds())).length == 2 ? JSON.stringify(added.getSeconds()) : '0'+JSON.stringify(added.getSeconds()));
+            var addedDateTime = addedDate+' '+addedTime;
+            return addedDateTime;
+          }
+
+          var expireTime = addMinutes(today, parseInt(this.reserveLimitTime.min, 10));
+
+          var reserveInfo = {time: this.reserveLimitTime, car: this.selectedCar, token_auth: token(), timestamp: dateTime, expiredTime: expireTime}
+
           this.selectedCar = {};
           this.openConfirm = false;
 
-          localStorage.setItem("token_auth", token());
+          localStorage.setItem("token_auth", JSON.stringify(reserveInfo));
           window.location.reload(true);
       }
     },
     computed: {
         token_auth(){
-            return localStorage.getItem("token_auth");
+            var token_auth = JSON.parse(localStorage.getItem("token_auth")).token_auth
+            return token_auth;
+        },
+        expiredTime(){
+            var expiredTime = JSON.parse(localStorage.getItem("token_auth")).expiredTime
+            return expiredTime;
         }
     }
   })
