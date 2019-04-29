@@ -14,9 +14,14 @@ def index(request):
     parking_list = list(Parking_zone.objects.values())
     if request.user.is_authenticated:
         id = request.user.id
+        print(id)
+        print(list(User_sys.objects.values()))
         u = list(User_sys.objects.filter(user_id=id).values())
         user_list = list(Register_user.objects.filter(user_id=u[0]['id']).values())
         user_car_list = list(Car.objects.filter(register_user_id=u[0]['id']).values())
+        print(request.user)
+        print(user_list)
+        print(u)
     else:
         user_list = [{'point':0}]
         user_car_list=[]
