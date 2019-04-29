@@ -132,6 +132,7 @@
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>
 <script src="https://unpkg.com/muse-ui/dist/muse-ui.js"></script>
 <script type='text/javascript'>
+    var user_i = [{ 'first_name':'{{user_u.0.first_name}}','last_name':'{{user_u.0.last_name}}','username':'{{user_u.0.username}}','email':'{{user_u.0.email}}' }];
     var user_info = {{user_in|safe}};
   </script>
 <script>
@@ -142,11 +143,11 @@
         return({
             docked: false,
             menuOpen: false,
-            firstname: user_info[0].user_fname,
-            lastname: user_info[0].user_lname,
-            username: user_info[0].username,
+            firstname: user_i[0].first_name,
+            lastname: user_i[0].last_name,
+            username: user_i[0].username,
             phone: user_info[0].phone_number,
-            email: user_info[0].email
+            email: user_i[0].email
         })
     }
   })

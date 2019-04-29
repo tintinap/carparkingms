@@ -27,9 +27,8 @@ class reserveAd(admin.ModelAdmin):
 
 
 class userAd(admin.ModelAdmin):
-    list_display = ['user_fname', 'user_lname', 'username', 'phone_number','email','point']
+    list_display = ['phone_number','point']
     list_per_page = 10
-    search_fields = ['user_fname']
 
 
 class carAd(admin.ModelAdmin):

@@ -37,17 +37,9 @@ class User_sys(models.Model):
     type = models.CharField(choices=TYPES,default='gu',max_length=2)
 
 class Register_user(models.Model):
-    user_fname = models.CharField(max_length=255)
-    user_lname = models.CharField(max_length=255)
-    username = models.CharField(null=False,unique=True,max_length=255)
-    password = models.CharField(null=False,max_length=255)
     phone_number = models.CharField(max_length=10)
-    email = models.EmailField()
     point = models.IntegerField()
     user = models.ForeignKey(User_sys, models.PROTECT)
-
-    def __str__(self):
-        return self.user_fname
 
 class Car(models.Model):
     register_user = models.ForeignKey(Register_user,models.PROTECT)
