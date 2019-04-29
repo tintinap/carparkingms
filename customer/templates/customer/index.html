@@ -108,31 +108,38 @@
 
     {% if user.is_authenticated %}
 {#    reserve button area#}
-    <mu-row v-if="isLogin" style="padding-top: 1em;">
+    <mu-row v-if="!isReserve" style="padding-top: 1em;">
       <mu-col span="12">
         <mu-flex justify-content="center" align-items="center">
           <mu-button full-width color="amber500" large @click="openCarSelector">Reserve<mu-icon right value="schedule"></mu-icon></mu-button>
         </mu-flex>
       </mu-col>
     </mu-row>
-  {% endif %}
-  {% if not user.is_authenticated %}
     <mu-row v-else style="padding-top: 1em;">
       <mu-col span="12">
         <mu-flex justify-content="center" align-items="center">
-          <mu-tooltip content="กรุณาเข้าสู่ระบบ">
-            <mu-button full-width color="success" large disabled>Reserve (50 Points)<mu-icon right value="schedule"></mu-icon></mu-button>
-          </mu-tooltip>
+          <mu-button full-width color="success" large disabled>Reserve <mu-icon right value="schedule"></mu-icon></mu-button>
         </mu-flex>
       </mu-col>
     </mu-row>
+  {% endif %}
+  {% if not user.is_authenticated %}
+    <mu-row style="padding-top: 1em;">
+      <mu-col span="12">
+        <mu-flex justify-content="center" align-items="center">
+          <mu-button full-width color="success" large disabled>Reserve <mu-icon right value="schedule"></mu-icon></mu-button>
+        </mu-flex>
+      </mu-col>
+    </mu-row>
+
+
     {% endif %}
 {#    Car Selector Area#}
     <mu-bottom-sheet :open.sync="isCarSelectorOpen">
     <mu-list @item-click="closeCarSelector">
       <mu-sub-header>กรุณาเลือกรถของท่าน</mu-sub-header>
       <div v-for="car in userCar">
-      <mu-list-item button @click="openConfirmDialog(car)">
+      <mu-list-item button @click="openLimitTimeDialog(car)">
         <mu-list-item-action>
           <mu-icon value="directions_car" color="amber500"></mu-icon>
         </mu-list-item-action>
@@ -142,14 +149,39 @@
     </mu-list>
   </mu-bottom-sheet>
 
+{#    alert select Time Area#}
+  <mu-dialog
+    title="กรุณาเลือกระยะเวลาในการจอง"
+    width="600"
+    max-width="80%"
+    scrollable
+    :open.sync="openLimitTime"
+  >
+    <mu-list>
+      <mu-list-item :key="option.min" v-for="option in options">
+        <mu-list-item-content>
+          <mu-radio color="amber500" :label="option.min + ' นาที ( ' + option.point + ' points )'" :value="option" v-model="reserveLimitTime"></mu-radio>
+        </mu-list-item-content>
+      </mu-list-item>
+    </mu-list>
+    <mu-button slot="actions" flat color="amber500" @click="openConfirmDialog()">ok</mu-button>
+  </mu-dialog>
 {#    alert dialog befor reserve area#}
-  <mu-dialog title="ยืนยันการจองที่จอดรถ?" width="600" max-width="80%" :esc-press-close="false" :overlay-close="false" :open.sync="openConfirm">
-    ทำการจองด้วย [[ selectedCar.carid ]] | [[ selectedCar.carbrand ]] เมื่อท่านทำการจองแล้วระบบจะหักPointsของท่านทันทีและไม่สามารถขอคืนPointsได้ ท่านต้องมาถึงจุดแสกนQR Codeภายในเวลา 15 นาที
+  <mu-dialog
+    title="ยืนยันการจองที่จอดรถ?"
+    width="600"
+    max-width="80%"
+    :esc-press-close="false"
+    :overlay-close="false"
+    :open.sync="openConfirm">
+    ทำการจองด้วย <b>[[ selectedCar.carid ]] | [[ selectedCar.carbrand ]]</b>
+    เมื่อท่านทำการจองแล้วระบบจะหักPointsของท่านทันทีและไม่สามารถขอคืนPointsได้
+    ท่านต้องมาถึงจุดแสกนQR Codeภายในเวลา <b>[[ reserveLimitTime.min ]]</b> นาที
     <mu-button slot="actions" flat color="grey400" @click="closeConfirmDialog">ยกเลิก</mu-button>
     <mu-button slot="actions" flat color="amber500" @click="CountdownReserve">จอง</mu-button>
   </mu-dialog>
 
-    <mu-row style="padding-top: 1em;">
+    <mu-row style="padding-top: 1em;" v-if="isReserve">
       <mu-col span="12">
         <mu-card>
           <mu-card-header title="QR Code" sub-title="กรุณาแสกนQR Codeทุกครั้ง">
@@ -167,7 +199,28 @@
           <mu-card-title :title="'Expired Time: '+expiredTime" sub-title="กรุณาแสกนQR Codeก่อนหมดเวลาในการจอง"></mu-card-title>
         </mu-card>
       </mu-col>
-    </mu-row><br/>
+    </mu-row>
+
+    <mu-row v-if="!isReserve" style="padding-top: 1em;">
+      <mu-col span="12">
+        <mu-card>
+          <mu-card-header title="QR Code" sub-title="กรุณาแสกนQR Codeทุกครั้ง">
+            <mu-avatar slot="avatar" color="amber500">
+              <mu-icon left value="fullscreen"></mu-icon>
+            </mu-avatar>
+          </mu-card-header>
+          <mu-flex justify-content="center">
+            <mu-paper :z-depth="3">
+              <mu-card-media>
+                <div id="qrcode"></div>
+              </mu-card-media>
+            </mu-paper>
+          </mu-flex>
+          <mu-card-title></mu-card-title>
+        </mu-card>
+      </mu-col>
+    </mu-row>
+    <br/>
   </mu-container>
 
 {#  footer area#}
@@ -219,11 +272,17 @@
             place:park[0].name,
             availableLots: park[0].available,
             unavailableLots: park[0].capacity-park[0].available,
-            expiredTime: '20/08/19 10:07:34',
             userCar: car_info,
             selectedCar: {},
             isReserve: false,
             userPoints: user_info[0].point,
+            reserveLimitTime: {min: '15', point: '50'},
+            options:[
+                {min: '15', point: '50'},
+                {min: '30', point: '100'},
+                {min: '60', point: '200'}
+            ],
+            openLimitTime: false
         })
     },
     methods: {
@@ -233,33 +292,100 @@
       openCarSelector () {
         this.isCarSelectorOpen = true;
       },
-      openConfirmDialog (carObj) {
+      openLimitTimeDialog (carObj) {
           this.selectedCar = carObj
+          this.openLimitTime = true;
+      },
+      closeLimitTimeDialog () {
+          this.selectedCar = {}
+          this.openLimitTime = false;
+      },
+      openConfirmDialog () {
           this.openConfirm = true;
+          this.openLimitTime = false;
       },
       closeConfirmDialog () {
-          this.selectedCar = {}
+          this.reserveLimitTime = {min: '15', point: '50'};
           this.openConfirm = false;
+          this.openLimitTime = false;
       },
       CountdownReserve(){
+
+          //create tiken area
           var rand = function() {
             return Math.random().toString(36).substr(2); // remove `0.`
           };
 
           var token = function() {
-            return rand() + rand(); // to make it longer
+            return rand() + rand() + rand() + rand(); // to make it longer
           };
+
+          //timestamp
+          var today = new Date();
+          var date = today.getDate()+'/'+(today.getMonth()+1)+'/'+today.getFullYear();
+          var time = ((JSON.stringify(today.getHours())).length == 2 ? JSON.stringify(today.getHours()) : '0'+JSON.stringify(today.getHours())) + ":"
+              + ((JSON.stringify(today.getMinutes())).length == 2 ? JSON.stringify(today.getMinutes()) : '0'+JSON.stringify(today.getMinutes())) + ":"
+              + ((JSON.stringify(today.getSeconds())).length == 2 ? JSON.stringify(today.getSeconds()) : '0'+JSON.stringify(today.getSeconds()));
+          var dateTime = date+' '+time;
+
+          //Add minute Function
+          function addMinutes(date, minutes) {
+            var added = new Date(date.getTime() + minutes*60000)
+            var addedDate = added.getDate()+'/'+(added.getMonth()+1)+'/'+added.getFullYear();
+            var addedTime = ((JSON.stringify(added.getHours())).length == 2 ? JSON.stringify(added.getHours()) : '0'+JSON.stringify(added.getHours())) + ":"
+              + ((JSON.stringify(added.getMinutes())).length == 2 ? JSON.stringify(added.getMinutes()) : '0'+JSON.stringify(added.getMinutes())) + ":"
+              + ((JSON.stringify(added.getSeconds())).length == 2 ? JSON.stringify(added.getSeconds()) : '0'+JSON.stringify(added.getSeconds()));
+            var addedDateTime = addedDate+' '+addedTime;
+            return addedDateTime;
+          }
+
+          var expireTime = addMinutes(today, parseInt(this.reserveLimitTime.min, 10));
+
+          var reserveInfo = {time: this.reserveLimitTime, car: this.selectedCar, token_auth: token(), timestamp: dateTime, expiredTime: expireTime}
 
           this.selectedCar = {};
           this.openConfirm = false;
 
-          localStorage.setItem("token_auth", token());
+          //Reserve Information Here
+          localStorage.setItem("token_auth", JSON.stringify(reserveInfo));
+
+          //ReserveState Here
+          localStorage.setItem("isReserve", JSON.stringify(true));
           window.location.reload(true);
       }
     },
     computed: {
         token_auth(){
-            return localStorage.getItem("token_auth");
+            var token_auth = JSON.parse(localStorage.getItem("token_auth")).token_auth
+            return token_auth;
+        },
+        expiredTime(){
+            var expiredTime = JSON.parse(localStorage.getItem("token_auth")).expiredTime
+            return expiredTime;
+        },
+        isReserve() {
+
+            //getTime
+            var today = new Date();
+            var date = today.getDate()+'/'+(today.getMonth()+1)+'/'+today.getFullYear();
+            var time = ((JSON.stringify(today.getHours())).length == 2 ? JSON.stringify(today.getHours()) : '0'+JSON.stringify(today.getHours())) + ":"
+              + ((JSON.stringify(today.getMinutes())).length == 2 ? JSON.stringify(today.getMinutes()) : '0'+JSON.stringify(today.getMinutes())) + ":"
+              + ((JSON.stringify(today.getSeconds())).length == 2 ? JSON.stringify(today.getSeconds()) : '0'+JSON.stringify(today.getSeconds()));
+            var dateTime = date+' '+time;
+
+            var reserveState = false;
+            if(localStorage.getItem("token_auth") == ""){
+                reserveState = false;
+            }
+            else{
+                if(JSON.parse(localStorage.getItem("token_auth")).expiredTime < dateTime){
+                    localStorage.setItem("isReserve", JSON.stringify(false));
+                    reserveState = false;
+                } else {
+                    reserveState = true;
+                }
+            }
+            return reserveState;
         }
     }
   })
