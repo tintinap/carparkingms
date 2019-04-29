@@ -15,7 +15,7 @@ def index(request):
     if request.user.is_authenticated:
         id = request.user.id
         u = list(User_sys.objects.filter(user_id=id).values())
-        user_list = list(Register_user.objects.filter(id=u[0]['id']).values())
+        user_list = list(Register_user.objects.filter(user_id=u[0]['id']).values())
         user_car_list = list(Car.objects.filter(register_user_id=u[0]['id']).values())
     else:
         user_list = [{'point':0}]
@@ -26,6 +26,7 @@ def index(request):
         'car_in':user_car_list
 
     }
+
     return render(request, 'customer/index.html',context=context)
 
 def my_login(request):
@@ -62,12 +63,12 @@ def my_login(request):
 def buypackage(request):
     id = request.user.id
     u = list(User_sys.objects.filter(user_id=id).values())
-    user = list(Register_user.objects.filter(id=u[0]['id']).values())
+    user = list(Register_user.objects.filter(user_id=u[0]['id']).values())
     if request.method == "POST":
-        re_user = Register_user.objects.get(id=u[0]['id'])
+        re_user = Register_user.objects.get(user_id=u[0]['id'])
         re_user.point = user[0]['point']+int(request.POST.get('point'))
         re_user.save()
-    user_1 = list(Register_user.objects.filter(id=u[0]['id']).values())
+    user_1 = list(Register_user.objects.filter(user_id=u[0]['id']).values())
     context = {
         'user_in': user_1,
     }
@@ -79,7 +80,7 @@ def register(request):
     if request.method == "POST":
         form_user = UsernameForm(request.POST)
         if form_user.is_valid():
-            user = User.objects.create_user(username=form_user.cleaned_data.get("username"),firstname=form_user.cleaned_data.get("firstname"),lastname=form_user.cleaned_data.get("lastname"), email=form_user.cleaned_data.get("email"),password=form_user.cleaned_data.get("password1"))
+            user = User.objects.create_user(username=form_user.cleaned_data.get("username"),first_name=form_user.cleaned_data.get("firstname"),last_name=form_user.cleaned_data.get("lastname"), email=form_user.cleaned_data.get("email"),password=form_user.cleaned_data.get("password1"))
             user.save()
             user_ob = User_sys.objects.create(
                 user=user,
