@@ -42,7 +42,7 @@
       <mu-list-item button @click="window.location = '{% url 'change_password' %}'">
         <mu-list-item-title >Change Password</mu-list-item-title>
       </mu-list-item>
-      <mu-list-item button>
+      <mu-list-item button @click="window.location = '{% url 'logout' %}'">
         <mu-list-item-title style="color: #f44336;">Logout</mu-list-item-title>
       </mu-list-item>
     </mu-list>
@@ -52,43 +52,46 @@
   <mu-container fluid="true" style="padding-top: 5em;">
     <mu-row style="padding-top: 1em;">
       <mu-col span="12">
-        <form method="get">
+        <form method="post" action="{% url 'edit_profile' %}">
+          {% csrf_token %}
           <mu-flex justify-content="center">
             <mu-flex justify-content="center" ><mu-icon value="person"></mu-icon>แก้ไขข้อมูลผู้ใช้</mu-flex>
           </mu-flex>
           <mu-text-field
             label-float
-            name="firstname"
+            name="{{form.firstname.label}}"
             v-model="firstname"
             color="amber600"
             full-width label="ชื่อจริง">
           </mu-text-field><br/>
           <mu-text-field
             label-float
-            name="lastname"
+            name="{{form.lastname.label}}"
             v-model="lastname"
             color="amber600"
             full-width label="นามสกุล">
           </mu-text-field><br/>
           <mu-text-field
             label-float
-            :value="username"
+            :value="{{form.username.label}}"
             v-model="username"
             name="username"
             color="amber600"
             full-width label="ชื่อผู้ใช้">
           </mu-text-field><br/>
+          {{form.email.errors}}
           <mu-text-field
             label-float
-            name="email"
+            name="{{form.email.label}}"
             v-model="email"
             color="amber600"
             full-width label="Email"
             suffix="@kmitl.ac.th">
           </mu-text-field><br/>
+          {{form.phone.errors}}
           <mu-text-field
             label-float
-            name="phone"
+            name="{{form.phone.label}}"
             v-model="phone"
             color="amber600"
             full-width label="เบอร์โทรศัพท์"
@@ -128,7 +131,10 @@
 {#script area#}
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>
 <script src="https://unpkg.com/muse-ui/dist/muse-ui.js"></script>
-
+<script type='text/javascript'>
+    var user_i = [{ 'first_name':'{{user_u.0.first_name}}','last_name':'{{user_u.0.last_name}}','username':'{{user_u.0.username}}','email':'{{user_u.0.email}}' }];
+    var user_info = {{user_in|safe}};
+  </script>
 <script>
   var app = new Vue({
     delimiters: ['[[', ']]'],
@@ -137,11 +143,11 @@
         return({
             docked: false,
             menuOpen: false,
-            firstname: 'Supakit',
-            lastname: 'Theanthunyakit',
-            username: 'POKINBKK',
-            phone: '0870614656',
-            email: '60070098@kmitl.ac.th'
+            firstname: user_i[0].first_name,
+            lastname: user_i[0].last_name,
+            username: user_i[0].username,
+            phone: user_info[0].phone_number,
+            email: user_i[0].email
         })
     }
   })

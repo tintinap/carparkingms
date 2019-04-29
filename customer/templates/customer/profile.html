@@ -42,7 +42,7 @@
       <mu-list-item button @click="window.location = '{% url 'change_password' %}'">
         <mu-list-item-title >Change Password</mu-list-item-title>
       </mu-list-item>
-      <mu-list-item button>
+      <mu-list-item button @click="window.location = '{% url 'logout' %}'">
         <mu-list-item-title style="color: #f44336;">Logout</mu-list-item-title>
       </mu-list-item>
     </mu-list>
@@ -151,7 +151,7 @@
                   <div slot="header">
                     <mu-flex align-items="center">
                       <mu-flex justify-content="center" fill><mu-avatar color="amber500" size="30"><mu-icon value="directions_car"></mu-icon></mu-avatar></mu-flex>
-                    <mu-flex style="padding-left: 1em;" justify-content="center" fill>[[ car.carbrand ]]</mu-flex>
+                    <mu-flex style="padding-left: 1em;" justify-content="center" fill>[[ car.car_brand ]]</mu-flex>
                     </mu-flex>
                   </div>
                   <div>
@@ -161,7 +161,7 @@
                   </div>
                   <div style="font-size: 2em;">
                     <mu-flex justify-content="start">
-                      <mu-flex justify-content="center">[[ car.carid ]]</mu-flex>
+                      <mu-flex justify-content="center">[[ car.car_license_number ]]</mu-flex>
                     </mu-flex>
                   </div>
                   <div>
@@ -171,7 +171,7 @@
                   </div>
                   <div style="font-size: 1.5em;">
                     <mu-flex justify-content="start">
-                      <mu-flex justify-content="center">[[ car.carmodel ]]</mu-flex>
+                      <mu-flex justify-content="center">[[ car.car_model ]]</mu-flex>
                     </mu-flex>
                   </div>
                   <div>
@@ -181,7 +181,7 @@
                   </div>
                   <div style="font-size: 1.5em;">
                     <mu-flex justify-content="start">
-                      <mu-flex justify-content="center">[[ car.carcolor ]]</mu-flex>
+                      <mu-flex justify-content="center">[[ car.car_color ]]</mu-flex>
                     </mu-flex>
                   </div>
                 </mu-expansion-panel>
@@ -203,7 +203,6 @@
       </mu-col>
     </mu-row><br/>
   </mu-container>
-
 {#  footer area#}
 {#  <footer style="width: 100%;height: 5em;background-color: #ffc107;margin-top: 1em;bottom: 0;">#}
 {#    <mu-container style="padding-top: 24px;">#}
@@ -228,7 +227,11 @@
 {#script area#}
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>
 <script src="https://unpkg.com/muse-ui/dist/muse-ui.js"></script>
-
+<script type='text/javascript'>
+    var user_in = [{ 'first_name':'{{user_u.0.first_name}}','last_name':'{{user_u.0.last_name}}','username':'{{user_u.0.username}}','email':'{{user_u.0.email}}' }];
+    var user_info = {{user_in|safe}};
+    var car_info = {{car_in|safe}};
+  </script>
 <script>
   var app = new Vue({
     delimiters: ['[[', ']]'],
@@ -238,15 +241,12 @@
             docked: false,
             menuOpen: false,
             activetabs: 0,
-            firstname: 'Supakit',
-            lastname: 'Theanthunyakit',
-            username: 'POKINBKK',
-            email: '60070098@kmitl.ac.th',
-            phone: '0870614656',
-            userCar: [
-                {carid: 'บฉ 7476', carbrand: 'Lamborghini', carmodel: 'Centenarion', 'carcolor': 'ส้ม'},
-                {carid: '1กค 3416', carbrand: 'BMW', carmodel: 'i8', 'carcolor': 'ขาว'}
-            ]
+            firstname: user_in[0].first_name,
+            lastname: user_in[0].last_name,
+            username: user_in[0].username,
+            email: user_in[0].email,
+            phone: user_info[0].phone_number,
+            userCar: car_info
         })
     }
   })

@@ -12,6 +12,9 @@
   body {
     font-family: 'Kanit', sans-serif;
   }
+  .errorlist{
+    color:red;
+    }
   </style>
 </head>
 <body>
@@ -42,6 +45,8 @@
   </mu-drawer>
 
   {#MainContent#}
+
+
   <mu-container fluid="true" style="padding-top: 5em;">
     <mu-row style="padding-top: 2em;">
       <mu-col span="12">
@@ -54,11 +59,12 @@
     </mu-row>
     <mu-row style="padding-top: 1em;">
       <mu-col span="12">
-        <form method="get">
+        <form method="post" action="{% url 'my_login' %}">
+          {% csrf_token %}
           <mu-text-field
             :value="username"
             v-model.lazy="username"
-            name="username"
+            name="{{form.username.label}}"
             color="amber600"
             icon="account_circle"
             full-width label="ชื่อผู้ใช้"
@@ -67,10 +73,8 @@
           <mu-text-field
             :value="password"
             v-model.lazy="password"
-            :action-icon="passVisibility ? 'visibility_off' : 'visibility'"
-            :action-click="() => (passVisibility = !passVisibility)"
-            :type="passVisibility ? 'text' : 'password'"
-            name="password"
+            type="password"
+            name="{{form.password.label}}"
             color="amber600"
             icon="locked"
             full-width label="รหัสผ่าน"
@@ -78,6 +82,10 @@
           </mu-text-field><br/>
           <mu-flex justify-content="center">
             <mu-flex justify-content="center" >
+              {% if error %}
+                    <p class="errorlist">{{error}}</p>
+            {% endif %}
+<!--              แก้แสดงผลerror-->
               <mu-button type="submit" large color="amber500">LOGIN<mu-icon right value="chevron_right"></mu-icon></mu-button>
             </mu-flex>
           </mu-flex>
