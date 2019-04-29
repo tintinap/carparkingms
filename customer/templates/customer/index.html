@@ -356,7 +356,7 @@
     },
     computed: {
         token_auth(){
-            var token_auth = JSON.parse(localStorage.getItem("token_auth")).token_auth
+            var token_auth = JSON.parse(localStorage.getItem("token_auth"))
             return token_auth;
         },
         expiredTime(){
