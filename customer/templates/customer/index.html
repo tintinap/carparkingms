@@ -174,7 +174,7 @@
     :esc-press-close="false"
     :overlay-close="false"
     :open.sync="openConfirm">
-    ทำการจองด้วย <b>[[ selectedCar.carid ]] | [[ selectedCar.carbrand ]]</b>
+    ทำการจองด้วย <b>[[ selectedCar.car_license_number ]] | [[ selectedCar.car_brand ]]</b>
     เมื่อท่านทำการจองแล้วระบบจะหักPointsของท่านทันทีและไม่สามารถขอคืนPointsได้
     ท่านต้องมาถึงจุดแสกนQR Codeภายในเวลา <b>[[ reserveLimitTime.min ]]</b> นาที
     <mu-button slot="actions" flat color="grey400" @click="closeConfirmDialog">ยกเลิก</mu-button>
@@ -274,10 +274,10 @@
             unavailableLots: park[0].capacity-park[0].available,
             userCar: car_info,
             selectedCar: {},
-            isReserve: false,
             userPoints: user_info[0].point,
             reserveLimitTime: {min: '15', point: '50'},
             options:[
+                {min: '1', point: '50'},
                 {min: '15', point: '50'},
                 {min: '30', point: '100'},
                 {min: '60', point: '200'}
