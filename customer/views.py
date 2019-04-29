@@ -15,8 +15,13 @@ def index(request):
     if request.user.is_authenticated:
         id = request.user.id
         u = list(User_sys.objects.filter(user_id=id).values())
-        user_list = list(Register_user.objects.filter(id=u[0]['id']).values())
+        user_list = list(Register_user.objects.filter(user_id=u[0]['id']).values())
         user_car_list = list(Car.objects.filter(register_user_id=u[0]['id']).values())
+        print(request.user)
+        print(id)
+        print(u[0]['id'])
+        print(u)
+        print(user_list)
     else:
         user_list = [{'point':0}]
         user_car_list=[]
@@ -62,12 +67,12 @@ def my_login(request):
 def buypackage(request):
     id = request.user.id
     u = list(User_sys.objects.filter(user_id=id).values())
-    user = list(Register_user.objects.filter(id=u[0]['id']).values())
+    user = list(Register_user.objects.filter(user_id=u[0]['id']).values())
     if request.method == "POST":
-        re_user = Register_user.objects.get(id=u[0]['id'])
+        re_user = Register_user.objects.get(user_id=u[0]['id'])
         re_user.point = user[0]['point']+int(request.POST.get('point'))
         re_user.save()
-    user_1 = list(Register_user.objects.filter(id=u[0]['id']).values())
+    user_1 = list(Register_user.objects.filter(user_id=u[0]['id']).values())
     context = {
         'user_in': user_1,
     }
@@ -107,12 +112,15 @@ def register(request):
 def profile(request):
     id = request.user.id
     user_in = list(User.objects.filter(id=id).values())
-    print(1)
-    print(user_in)
-    print(user_in[0]["first_name"])
     u = list(User_sys.objects.filter(user_id=id).values())
     user = list(Register_user.objects.filter(user_id=u[0]['id']).values())
     car = list(Car.objects.filter(register_user_id=user[0]["id"]).values())
+    print(request.user)
+    print(id)
+    print(u[0]['id'])
+    print(u)
+    print(user)
+    print(user_in)
     context = {
         'user_u':user_in,
         'user_in':user,
