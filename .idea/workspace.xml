@@ -30,8 +30,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/customer/templates/customer/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="294">
-              <caret line="372" column="5" lean-forward="true" selection-start-line="372" selection-start-column="5" selection-end-line="372" selection-end-column="5" />
+            <state relative-caret-position="-4942">
+              <caret line="139" column="37" selection-start-line="139" selection-start-column="37" selection-end-line="139" selection-end-column="37" />
               <folding>
                 <element signature="n#style#0;n#mu-appbar#0;n#header#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#mu-list-item-title#0;n#mu-list-item#3;n#mu-list#0;n#mu-drawer#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -267,7 +267,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="86721000" />
+    <option name="totallyTimeSpent" value="87655000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="23" width="1550" height="848" extended-state="6" />
@@ -385,8 +385,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/customer/templates/customer/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="294">
-          <caret line="372" column="5" lean-forward="true" selection-start-line="372" selection-start-column="5" selection-end-line="372" selection-end-column="5" />
+        <state relative-caret-position="-4942">
+          <caret line="139" column="37" selection-start-line="139" selection-start-column="37" selection-end-line="139" selection-end-column="37" />
           <folding>
             <element signature="n#style#0;n#mu-appbar#0;n#header#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#mu-list-item-title#0;n#mu-list-item#3;n#mu-list#0;n#mu-drawer#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
