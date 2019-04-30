@@ -11,5 +11,4 @@ urlpatterns = [
     path('edit_profile/', views.editprofile, name='edit_profile'),
     path('add_car/', views.addcar, name='add_car'),
     path('change_password/', views.changepassword, name='change_password'),
-    path('reserve/', views.reserve, name='reserve'),
 ]
