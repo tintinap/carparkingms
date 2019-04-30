@@ -12,8 +12,8 @@ class Parking_slot(models.Model):
     parking_zone = models.ForeignKey(Parking_zone,models.PROTECT)
 
 class Parking(models.Model):
-    arrive_at = models.DateField()
-    leave_at = models.DateField()
+    arrive_at = models.DateField(null=True)
+    leave_at = models.DateField(null=True)
     parking_zone = models.ForeignKey(Parking_zone, models.PROTECT)
     parking_slot = models.ForeignKey(Parking_slot, models.PROTECT)
     reservation = models.ManyToManyField('Reservation')

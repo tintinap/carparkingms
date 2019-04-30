@@ -7,24 +7,48 @@ from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 
 from customer.form import LoginForm, UsernameForm, Addcarform, Editprofileform, Changepassform
-from customer.models import Parking_zone, Register_user, Car, User_sys
+from customer.models import Parking_zone, Register_user, Car, User_sys, Parking_slot, Parking, Reservation
 
 
 def index(request):
-    parking_list = list(Parking_zone.objects.values())
     if request.user.is_authenticated:
         id = request.user.id
-        print(id)
-        print(list(User_sys.objects.values()))
         u = list(User_sys.objects.filter(user_id=id).values())
         user_list = list(Register_user.objects.filter(user_id=u[0]['id']).values())
         user_car_list = list(Car.objects.filter(register_user_id=u[0]['id']).values())
-        print(request.user)
-        print(user_list)
-        print(u)
+
+        if request.method == 'POST':
+            reserve_info = json.loads(request.body)
+            slot = list(Parking_slot.objects.values())
+            for i in slot:
+                if i['status']:
+                    break
+            p_slot = Parking_slot.objects.get(id=i['id'])
+            p_zone = Parking_zone.objects.get(id=i['parking_zone_id'])
+
+            p_slot.status = 0
+            p_slot.save()
+
+            p_zone.available -= 1
+            p_zone.save()
+
+            u_point = Register_user.objects.get(user_id=u[0]['id'])
+            u_point.point -= int(reserve_info['option']['point'])
+            u_point.save()
+            park = Parking.objects.create(
+                parking_slot=p_slot,
+                parking_zone=p_zone,
+            )
+            reserve = Reservation.objects.create(
+                reserve_status="re",
+                reserve_token=reserve_info['token_auth'],
+                reserve_at=reserve_info['timestamp']
+            )
+
     else:
         user_list = [{'point':0}]
         user_car_list=[]
+    parking_list = list(Parking_zone.objects.values())
     context = {
         'parking':parking_list,
         'user_in':user_list,
@@ -207,3 +231,7 @@ def changepassword(request):
 def my_logout(requset):
 	logout(requset)
 	return redirect('index')
+
+def reserve(requset,token):
+    print(1)
+    print(requset.body)

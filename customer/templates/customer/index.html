@@ -248,6 +248,8 @@
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>
 <script src="https://unpkg.com/muse-ui/dist/muse-ui.js"></script>
 <script src="{% static 'js/qrcode.min.js' %}"></script>
+<script src="{% static 'js/axios.min.js' %}"></script>
+<script src="{% static 'js/js.cookie.js' %}"></script>
 
 <script type='text/javascript'>
     var park = {{ parking|safe }};
@@ -256,6 +258,7 @@
 </script>
 
 <script>
+  var csrftoken= Cookies.get('csrftoken');
   var app = new Vue({
     delimiters: ['[[', ']]'],
     el: '#indexpage',
@@ -327,6 +330,7 @@
               + ((JSON.stringify(today.getMinutes())).length == 2 ? JSON.stringify(today.getMinutes()) : '0'+JSON.stringify(today.getMinutes())) + ":"
               + ((JSON.stringify(today.getSeconds())).length == 2 ? JSON.stringify(today.getSeconds()) : '0'+JSON.stringify(today.getSeconds()));
           var dateTime = date+' '+time;
+          var dateat = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
 
           //Add minute Function
           function addMinutes(date, minutes) {
@@ -341,7 +345,20 @@
 
           var expireTime = addMinutes(today, parseInt(this.reserveLimitTime.min, 10));
 
-          var reserveInfo = {time: this.reserveLimitTime, car: this.selectedCar, token_auth: token(), timestamp: dateTime, expiredTime: expireTime}
+          var reserveInfo = {time: this.reserveLimitTime, car: this.selectedCar, token_auth: token(), timestamp: dateat, expiredTime: expireTime,option: this.reserveLimitTime}
+
+          axios.post('http://127.0.0.1:8000',
+                    reserveInfo,
+                    {headers:{'X-CSRFTOKEN':csrftoken}}
+                )
+                .then(response => {
+                    console.log(1)
+                    console.log(response)
+                })
+                .catch(error => {
+                    console.log(2)
+                    console.log(error.response)
+                });
 
           this.selectedCar = {};
           this.openConfirm = false;
@@ -349,9 +366,14 @@
           //Reserve Information Here
           localStorage.setItem("token_auth", JSON.stringify(reserveInfo));
 
+
           //ReserveState Here
           localStorage.setItem("isReserve", JSON.stringify(true));
           window.location.reload(true);
+
+
+
+           
       }
     },
     computed: {
