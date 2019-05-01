@@ -16,6 +16,9 @@
 </head>
 <body>
 <div id="indexpage">
+{#<div id="modal" style="position: sticky; bottom: 0;top: 0;left: 0;right: 0;z-index: 2000;background-color: red">#}
+{#  <p>LOADING</p>#}
+{#</div>#}
   <header>
     <mu-appbar style="width: 100%;position: fixed;" color="amber500"  z-depth="0">
       <mu-flex justify-content="start">
@@ -62,6 +65,7 @@
     </mu-list>
   </mu-drawer>
   {%endif%}
+
   {#MainContent#}
   <mu-container fluid="true" style="padding-top: 5em;">
     {#        Parking slotinformation are#}
@@ -212,7 +216,7 @@
           <mu-flex justify-content="center">
             <mu-paper :z-depth="3">
               <mu-card-media>
-                <div id="qrcode"></div>
+                <div id="parking"></div>
               </mu-card-media>
             </mu-paper>
           </mu-flex>
@@ -288,7 +292,8 @@
                 {min: '60', point: '200'}
             ],
             openLimitTime: false,
-            slot_id : ''
+            slot_id : '',
+            modal: false,
         })
     },
     methods: {
@@ -348,7 +353,7 @@
 
           var expireTime = addMinutes(today, parseInt(this.reserveLimitTime.min, 10));
 
-          var reserveInfo = {time: this.reserveLimitTime, car: this.selectedCar, token_auth: token(), timestamp: dateat, expiredTime: expireTime,option: this.reserveLimitTime}
+          var reserveInfo = {time: this.reserveLimitTime, car: this.selectedCar, token_auth: token(), timestamp: dateat, expiredTime: expireTime,option: this.reserveLimitTime, type: 'reserve'}
 
           axios.post('http://127.0.0.1:8000/api_index/',
                     reserveInfo,
@@ -358,15 +363,7 @@
                     console.log(1)
                     console.log(response)
                     localStorage.setItem("parking_lot", JSON.stringify(response))
-
-                    document.getElementById("qrcode").remove()
-                    new QRCode(document.getElementById("qrcode"), {
-                        text: app.token_auth,
-                        width: 300,
-                        height: 300,
-                        colorDark : "#000000",
-                        colorLight : "#ffffff",
-                    });
+                    setTimeout(function(){ window.location.reload(true);}, 600);
                 })
                 .catch(error => {
                     console.log(2)
@@ -375,7 +372,6 @@
 
           this.selectedCar = {};
           this.openConfirm = false;
-          isReserve = true;
 
           //Reserve Information Here
           localStorage.setItem("token_auth", JSON.stringify(reserveInfo));
@@ -384,17 +380,17 @@
           //ReserveState Here
           localStorage.setItem("isReserve", JSON.stringify(true));
 
-          // window.location.reload(true);
-
-
-
            
       }
     },
     computed: {
         token_auth(){
-            var token_auth = JSON.parse(localStorage.getItem("token_auth"))
-            return token_auth;
+            var result = ""
+            if(this.isReserve == true){
+                var token_auth = JSON.parse(localStorage.getItem("token_auth"));
+                var result = 'http://127.0.0.1:8000/reserve/'+token_auth.token_auth;
+            }
+            return result;
         },
         expiredTime(){
             var expiredTime = JSON.parse(localStorage.getItem("token_auth")).expiredTime
@@ -411,7 +407,7 @@
             var dateTime = date+' '+time;
 
             var reserveState = false;
-            if(localStorage.getItem("token_auth") == ""){
+            if((JSON.parse(localStorage.getItem("token_auth"))).type == 'parking'){
                 reserveState = false;
             }
             else{
@@ -426,9 +422,37 @@
         }
     },
     mounted() {
-        localStorage.setItem("token_auth", "");
-        localStorage.setItem("parking_lot", "");
-        localStorage.setItem("isReserve", "");
+        var isKey = window.localStorage.key(0);
+        console.log(isKey);
+        if(isKey === null){
+          localStorage.setItem("token_auth", "");
+          localStorage.setItem("parking_lot", "");
+          localStorage.setItem("isReserve", "false");
+          setTimeout(function(){ window.location.reload(true);}, 600);
+        } else {
+            if(localStorage.getItem(isKey) == "false"){
+                          //create tiken area
+                var rand = function() {
+                  return Math.random().toString(36).substr(2); // remove `0.`
+                };
+
+                var token = function() {
+                  return rand() + rand() + rand() + rand(); // to make it longer
+                };
+                localStorage.setItem("token_auth", JSON.stringify({token_auth: token(), type: 'parking'}));
+                localStorage.setItem("parking_lot", "");
+            }
+        }
+
+        let parking_qr = new QRCode(document.getElementById("parking"), {
+          text: 'http://127.0.0.1:8000/parking'+(JSON.parse((localStorage.getItem("token_auth")))).token_auth,
+          width: 300,
+          height: 300,
+          colorDark : "#000000",
+          colorLight : "#ffffff",
+        });
+
+
     },
 
   })
@@ -440,8 +464,14 @@
         width: 300,
         height: 300,
         colorDark : "#000000",
-        colorLight : "#ffffff",
-    });
+        colorLight : "#ffffff",});
+
+    function loading() {
+        setTimeout(function () {
+            document.getElementById('modal').style.display='none';
+        }, 600)
+    }
+
 </script>
 
 </body>
