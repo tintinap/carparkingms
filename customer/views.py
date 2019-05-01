@@ -174,13 +174,13 @@ def addcar(request):
         id = request.user.id
         u = User_sys.objects.get(user_id=id)
         user = Register_user.objects.get(user_id=u.id)
-        form_user = Addcarform(request.POST)
-        if form_user.is_valid():
+        form = Addcarform(request.POST)
+        if form.is_valid():
             car_ob = Car.objects.create(
-                car_license_number=form_user.cleaned_data.get("carid"),
-                car_brand=form_user.cleaned_data.get("carbrand"),
-                car_model=form_user.cleaned_data.get("carmodel"),
-                car_color=form_user.cleaned_data.get("carcolor"),
+                car_license_number=form.cleaned_data.get("carid"),
+                car_brand=form.cleaned_data.get("carbrand"),
+                car_model=form.cleaned_data.get("carmodel"),
+                car_color=form.cleaned_data.get("carcolor"),
                 register_user=user
             )
             return redirect('profile')
