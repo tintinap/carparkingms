@@ -221,6 +221,7 @@
       </mu-col>
     </mu-row>
     <br/>
+    [[slot_id]]
   </mu-container>
 
 {#  footer area#}
@@ -252,6 +253,7 @@
 <script src="{% static 'js/js.cookie.js' %}"></script>
 
 <script type='text/javascript'>
+    var slot = {{ park_slot}};
     var park = {{ parking|safe }};
     var car_info = {{car_in|safe}};
     var user_info = {{user_in|safe}};
@@ -285,7 +287,8 @@
                 {min: '30', point: '100'},
                 {min: '60', point: '200'}
             ],
-            openLimitTime: false
+            openLimitTime: false,
+            slot_id : ''
         })
     },
     methods: {
@@ -347,13 +350,23 @@
 
           var reserveInfo = {time: this.reserveLimitTime, car: this.selectedCar, token_auth: token(), timestamp: dateat, expiredTime: expireTime,option: this.reserveLimitTime}
 
-          axios.post('http://127.0.0.1:8000',
+          axios.post('http://127.0.0.1:8000/api_index/',
                     reserveInfo,
                     {headers:{'X-CSRFTOKEN':csrftoken}}
                 )
                 .then(response => {
                     console.log(1)
                     console.log(response)
+                    localStorage.setItem("parking_lot", JSON.stringify(response))
+
+                    document.getElementById("qrcode").remove()
+                    new QRCode(document.getElementById("qrcode"), {
+                        text: app.token_auth,
+                        width: 300,
+                        height: 300,
+                        colorDark : "#000000",
+                        colorLight : "#ffffff",
+                    });
                 })
                 .catch(error => {
                     console.log(2)
@@ -362,6 +375,7 @@
 
           this.selectedCar = {};
           this.openConfirm = false;
+          isReserve = true;
 
           //Reserve Information Here
           localStorage.setItem("token_auth", JSON.stringify(reserveInfo));
@@ -369,7 +383,8 @@
 
           //ReserveState Here
           localStorage.setItem("isReserve", JSON.stringify(true));
-          window.location.reload(true);
+
+          // window.location.reload(true);
 
 
 
@@ -409,7 +424,13 @@
             }
             return reserveState;
         }
-    }
+    },
+    mounted() {
+        localStorage.setItem("token_auth", "");
+        localStorage.setItem("parking_lot", "");
+        localStorage.setItem("isReserve", "");
+    },
+
   })
 </script>
 

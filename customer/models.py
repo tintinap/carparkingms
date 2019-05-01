@@ -11,6 +11,7 @@ class Parking_slot(models.Model):
     status = models.BooleanField(null=False)
     parking_zone = models.ForeignKey(Parking_zone,models.PROTECT)
 
+
 class Parking(models.Model):
     arrive_at = models.DateField(null=True)
     leave_at = models.DateField(null=True)

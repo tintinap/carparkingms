@@ -1,9 +1,9 @@
-import random
 import json
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect
 
 from customer.form import LoginForm, UsernameForm, Addcarform, Editprofileform, Changepassform
@@ -16,47 +16,26 @@ def index(request):
         u = list(User_sys.objects.filter(user_id=id).values())
         user_list = list(Register_user.objects.filter(user_id=u[0]['id']).values())
         user_car_list = list(Car.objects.filter(register_user_id=u[0]['id']).values())
+        park = []
 
-        if request.method == 'POST':
-            reserve_info = json.loads(request.body)
-            slot = list(Parking_slot.objects.values())
-            for i in slot:
-                if i['status']:
-                    break
-            p_slot = Parking_slot.objects.get(id=i['id'])
-            p_zone = Parking_zone.objects.get(id=i['parking_zone_id'])
-
-            p_slot.status = 0
-            p_slot.save()
-
-            p_zone.available -= 1
-            p_zone.save()
-
-            u_point = Register_user.objects.get(user_id=u[0]['id'])
-            u_point.point -= int(reserve_info['option']['point'])
-            u_point.save()
-            park = Parking.objects.create(
-                parking_slot=p_slot,
-                parking_zone=p_zone,
-            )
-            reserve = Reservation.objects.create(
-                reserve_status="re",
-                reserve_token=reserve_info['token_auth'],
-                reserve_at=reserve_info['timestamp']
-            )
 
     else:
-        user_list = [{'point':0}]
-        user_car_list=[]
+        park = []
+        user_list = [{'point': 0}]
+        user_car_list = []
     parking_list = list(Parking_zone.objects.values())
     context = {
-        'parking':parking_list,
-        'user_in':user_list,
-        'car_in':user_car_list
+        'park_slot':park,
+        'parking': parking_list,
+        'user_in': user_list,
+        'car_in': user_car_list
 
     }
+    print(park)
+    print(context['park_slot'])
 
-    return render(request, 'customer/index.html',context=context)
+    return render(request, 'customer/index.html', context=context)
+
 
 def my_login(request):
     context = {}
@@ -82,11 +61,12 @@ def my_login(request):
     next_url = request.GET.get('next')
     if next_url:
         context['next_url'] = next_url
-    context={
-        'form':form
+    context = {
+        'form': form
     }
     print(form)
-    return render(request, 'customer/login.html',context=context)
+    return render(request, 'customer/login.html', context=context)
+
 
 @login_required
 def buypackage(request):
@@ -95,21 +75,26 @@ def buypackage(request):
     user = list(Register_user.objects.filter(user_id=u[0]['id']).values())
     if request.method == "POST":
         re_user = Register_user.objects.get(user_id=u[0]['id'])
-        re_user.point = user[0]['point']+int(request.POST.get('point'))
+        re_user.point = user[0]['point'] + int(request.POST.get('point'))
         re_user.save()
     user_1 = list(Register_user.objects.filter(user_id=u[0]['id']).values())
     context = {
         'user_in': user_1,
     }
 
-    return render(request, 'customer/buypackage.html',context=context)
+    return render(request, 'customer/buypackage.html', context=context)
+
 
 def register(request):
     form_user = UsernameForm()
     if request.method == "POST":
         form_user = UsernameForm(request.POST)
         if form_user.is_valid():
-            user = User.objects.create_user(username=form_user.cleaned_data.get("username"),first_name=form_user.cleaned_data.get("firstname"),last_name=form_user.cleaned_data.get("lastname"), email=form_user.cleaned_data.get("email"),password=form_user.cleaned_data.get("password1"))
+            user = User.objects.create_user(username=form_user.cleaned_data.get("username"),
+                                            first_name=form_user.cleaned_data.get("firstname"),
+                                            last_name=form_user.cleaned_data.get("lastname"),
+                                            email=form_user.cleaned_data.get("email"),
+                                            password=form_user.cleaned_data.get("password1"))
             user.save()
             user_ob = User_sys.objects.create(
                 user=user,
@@ -129,9 +114,10 @@ def register(request):
             )
             return redirect('index')
     context = {
-        'form_user':form_user,
+        'form_user': form_user,
     }
-    return render(request, 'customer/register.html',context=context)
+    return render(request, 'customer/register.html', context=context)
+
 
 @login_required
 def profile(request):
@@ -144,11 +130,12 @@ def profile(request):
     user = list(Register_user.objects.filter(user_id=u[0]['id']).values())
     car = list(Car.objects.filter(register_user_id=user[0]["id"]).values())
     context = {
-        'user_u':user_in,
-        'user_in':user,
-        'car_in':car
+        'user_u': user_in,
+        'user_in': user,
+        'car_in': car
     }
-    return render(request, 'customer/profile.html',context=context)
+    return render(request, 'customer/profile.html', context=context)
+
 
 @login_required
 def editprofile(request):
@@ -172,13 +159,13 @@ def editprofile(request):
             us.save()
             return redirect('profile')
 
-
     context = {
-        'user_u':user_in,
+        'user_u': user_in,
         'user_in': user,
-        'form':form
+        'form': form
     }
-    return render(request, 'customer/editprofile.html',context=context)
+    return render(request, 'customer/editprofile.html', context=context)
+
 
 @login_required
 def addcar(request):
@@ -200,7 +187,8 @@ def addcar(request):
     context = {
         'form': form,
     }
-    return render(request, 'customer/addcar.html',context=context)
+    return render(request, 'customer/addcar.html', context=context)
+
 
 @login_required
 def changepassword(request):
@@ -225,13 +213,61 @@ def changepassword(request):
 
     context = {"form": form,
                'error': error}
-    return render(request, 'customer/changepassword.html',context=context)
+    return render(request, 'customer/changepassword.html', context=context)
+
 
 @login_required
 def my_logout(requset):
-	logout(requset)
-	return redirect('index')
+    logout(requset)
+    return redirect('index')
 
-def reserve(requset,token):
+
+def reserve(requset, token):
     print(1)
     print(requset.body)
+
+def api_index(request):
+    if request.method == 'POST':
+        id = request.user.id
+        u = list(User_sys.objects.filter(user_id=id).values())
+        user_list = list(Register_user.objects.filter(user_id=u[0]['id']).values())
+        user_car_list = list(Car.objects.filter(register_user_id=u[0]['id']).values())
+        reserve_info = json.loads(request.body)
+        slot = list(Parking_slot.objects.values())
+        for i in slot:
+            if i['status']:
+                break
+        p_slot = Parking_slot.objects.get(id=i['id'])
+        p_zone = Parking_zone.objects.get(id=i['parking_zone_id'])
+
+        p_slot.status = 0
+        p_slot.save()
+
+        p_zone.available -= 1
+        p_zone.save()
+
+        u_point = Register_user.objects.get(user_id=u[0]['id'])
+        u_point.point -= int(reserve_info['option']['point'])
+        u_point.save()
+        park_ing = Parking.objects.create(
+            parking_slot=p_slot,
+            parking_zone=p_zone,
+        )
+        reserve = Reservation.objects.create(
+            reserve_status="re",
+            reserve_token=reserve_info['token_auth'],
+            reserve_at=reserve_info['timestamp']
+        )
+        park = list(Parking_slot.objects.filter(id=park_ing.id).values())
+        parking_list = list(Parking_zone.objects.values())
+        context = {
+            'park_slot': park,
+            'parking': parking_list,
+            'user_in': user_list,
+            'car_in': user_car_list
+        }
+        print(context['park_slot'])
+
+        print(json.dumps(context))
+
+        return JsonResponse(context, status=200)
