@@ -445,7 +445,7 @@
         }
 
         let parking_qr = new QRCode(document.getElementById("parking"), {
-          text: 'http://127.0.0.1:8000/parking'+(JSON.parse((localStorage.getItem("token_auth")))).token_auth,
+          text: 'http://127.0.0.1:8000/parking/'+(JSON.parse((localStorage.getItem("token_auth")))).token_auth,
           width: 300,
           height: 300,
           colorDark : "#000000",
