@@ -59,8 +59,12 @@
     </mu-row>
     <mu-row style="padding-top: 1em;">
       <mu-col span="12">
+        {% if error %}
+                    <p class="errorlist">{{error}}</p>
+            {% endif %}
         <form method="post" action="{% url 'my_login' %}">
           {% csrf_token %}
+          {{form.username.errors}}
           <mu-text-field
             :value="username"
             v-model.lazy="username"
@@ -70,6 +74,7 @@
             full-width label="ชื่อผู้ใช้"
             placeholder="กรุณาใส่ชื่อผู้ใช้">
           </mu-text-field><br/>
+          {{form.password.errors}}
           <mu-text-field
             :value="password"
             v-model.lazy="password"
@@ -82,9 +87,6 @@
           </mu-text-field><br/>
           <mu-flex justify-content="center">
             <mu-flex justify-content="center" >
-              {% if error %}
-                    <p class="errorlist">{{error}}</p>
-            {% endif %}
 <!--              แก้แสดงผลerror-->
               <mu-button type="submit" large color="amber500">LOGIN<mu-icon right value="chevron_right"></mu-icon></mu-button>
             </mu-flex>
@@ -118,6 +120,7 @@
 {#script area#}
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>
 <script src="https://unpkg.com/muse-ui/dist/muse-ui.js"></script>
+
 
 <script>
   var app = new Vue({

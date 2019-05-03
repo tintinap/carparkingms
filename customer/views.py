@@ -38,6 +38,9 @@ def index(request):
 
 
 def my_login(request):
+    user=''
+    username=''
+    password=''
     context = {}
     form = LoginForm()
     if request.method == 'POST':
@@ -45,7 +48,7 @@ def my_login(request):
         if form.is_valid():
             username = form.cleaned_data.get("username")
             password = form.cleaned_data.get("password")
-        user = authenticate(request, username=username, password=password)
+            user = authenticate(request, username=username, password=password)
         if user:
             login(request, user)
 
@@ -54,17 +57,12 @@ def my_login(request):
                 return redirect(next_url)
             else:
                 return redirect("index")
-        else:
-            context['username'] = username
-            context['password'] = password
+        if username!= '' or password!= '':
             context['error'] = 'Wrong username or password'
     next_url = request.GET.get('next')
     if next_url:
         context['next_url'] = next_url
-    context = {
-        'form': form
-    }
-    print(form)
+    context['form'] = form
     return render(request, 'customer/login.html', context=context)
 
 
