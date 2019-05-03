@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Register</title>
+  <title>สมัครสมาชิก</title>
   {% load static %}
   <link rel="stylesheet" href="https://unpkg.com/muse-ui/dist/muse-ui.css">
   <link href="https://fonts.googleapis.com/css?family=Kanit" rel="stylesheet">
@@ -30,12 +30,16 @@
   {#sidebar#}
   <mu-drawer :open.sync="menuOpen" :docked="docked" :right="false">
     <mu-list>
+      <mu-list-item button @click="window.location = '{% url 'index' %}'">
+        <mu-list-item-title>หน้าแรก</mu-list-item-title>
+        <mu-icon right value="home"></mu-icon>
+      </mu-list-item>
       <mu-list-item button @click="window.location = '{% url 'my_login' %}'">
-        <mu-list-item-title>Login</mu-list-item-title>
+        <mu-list-item-title>เข้าสู่ระบบ</mu-list-item-title>
         <mu-icon right value="person"></mu-icon>
       </mu-list-item>
       <mu-list-item button @click="window.location = '{% url 'register' %}'">
-        <mu-list-item-title>Register</mu-list-item-title>
+        <mu-list-item-title>สมัครสมาชิก</mu-list-item-title>
         <mu-icon right value="person_add"></mu-icon>
       </mu-list-item>
     </mu-list>
@@ -43,9 +47,9 @@
 
   {#MainContent#}
   <mu-container fluid="true" style="padding-top: 5em;">
-{% if form_user.non_field_errors %}
-        <p>{{form_user.non_field_errors}}</p>
-        {% endif %}
+  {% if form_user.non_field_errors %}
+    <p>{{form_user.non_field_errors}}</p>
+  {% endif %}
     <mu-row style="padding-top: 1em;">
       <mu-col span="12">
         <form method="post" action="{% url 'register' %}">
@@ -53,7 +57,18 @@
           <mu-flex justify-content="center">
             <mu-flex justify-content="center" ><mu-icon value="person"></mu-icon>ข้อมูลส่วนตัวผู้ใช้</mu-flex>
           </mu-flex>
-          {{form_user.firstname.errors}}
+
+          {% if form_user.firstname.errors %}
+          <mu-text-field
+            label-float
+            name="{{form_user.firstname.label}}"
+            v-model.lazy="firstname"
+            color="amber600"
+            error-text="กรุณาใส่ชื่อจริง"
+            full-width label="ชื่อจริง">
+          </mu-text-field><br/>
+          {% endif %}
+          {% if not form_user.firstname.errors %}
           <mu-text-field
             label-float
             name="{{form_user.firstname.label}}"
@@ -61,7 +76,20 @@
             color="amber600"
             full-width label="ชื่อจริง">
           </mu-text-field><br/>
-          {{form_user.lastname.errors}}
+          {% endif %}
+
+
+          {% if form_user.lastname.errors %}
+          <mu-text-field
+            label-float
+            name="{{form_user.lastname.label}}"
+            v-model.lazy="lastname"
+            color="amber600"
+            error-text="กรุณาใส่นามสกุล"
+            full-width label="นามสกุล">
+          </mu-text-field><br/>
+          {% endif %}
+          {% if not form_user.lastname.errors %}
           <mu-text-field
             label-float
             name="{{form_user.lastname.label}}"
@@ -69,20 +97,40 @@
             color="amber600"
             full-width label="นามสกุล">
           </mu-text-field><br/>
-          <table>
-            <tr>
-              <td>{{form_user.email.errors}}</td>
-            </tr>
-          </table>
+          {% endif %}
+
+          {% if form_user.email.errors %}
           <mu-text-field
             label-float
             name="{{form_user.email.label}}"
             v-model.lazy="email"
             color="amber600"
-            full-width label="Email"
-            suffix="@kmitl.ac.th">
+            error-text="กรุณาใส่อีเมลล์ให้ถูกต้อง"
+            full-width label="อีเมลล์">
           </mu-text-field><br/>
-          {{form_user.phone.errors}}
+          {% endif %}
+          {% if not form_user.email.errors %}
+          <mu-text-field
+            label-float
+            name="{{form_user.email.label}}"
+            v-model.lazy="email"
+            color="amber600"
+            full-width label="อีเมลล์">
+          </mu-text-field><br/>
+          {% endif %}
+
+          {% if form_user.phone.errors %}
+          <mu-text-field
+            label-float
+            name="phone"
+            v-model.lazy="{{form_user.phone.label}}"
+            color="amber600"
+            full-width label="เบอร์โทรศัพท์"
+            error-text="กรุณาใส่เบอร์โทรศัพท์ให้ถูกต้อง"
+            type="text">
+          </mu-text-field><br/>
+          {% endif %}
+          {% if not form_user.phone.errors %}
           <mu-text-field
             label-float
             name="phone"
@@ -91,18 +139,43 @@
             full-width label="เบอร์โทรศัพท์"
             type="text">
           </mu-text-field><br/>
+          {% endif %}
+
           <mu-flex justify-content="center">
             <mu-flex justify-content="center" ><mu-icon value="directions_car"></mu-icon>ข้อมูลรถยนต์ผู้ใช้</mu-flex>
           </mu-flex>
-          {{form_user.carid.errors}}
+
+          {% if form_user.carid.errors %}
           <mu-text-field
             label-float
             name="{{form_user.carid.label}}"
             v-model.lazy="carid"
             color="amber600"
-            full-width label="ทะเบียนรถ">
+            error-text="กรุณาใส่ทะเบียนให้ถูกต้อง"
+            full-width label="ทะเบียน">
           </mu-text-field><br/>
-          {{form_user.carbrand.errors}}
+          {% endif %}
+          {% if not form_user.carid.errors %}
+          <mu-text-field
+            label-float
+            name="{{form_user.carid.label}}"
+            v-model.lazy="carid"
+            color="amber600"
+            full-width label="ทะเบียน">
+          </mu-text-field><br/>
+          {% endif %}
+
+          {% if form_user.carbrand.errors %}
+          <mu-text-field
+            label-float
+            name="{{form_user.carbrand.label}}"
+            v-model.lazy="carbrand"
+            color="amber600"
+            error-text="กรุณาใส่ยี่ห้อให้ถูกต้อง"
+            full-width label="ยี่ห้อ">
+          </mu-text-field><br/>
+          {% endif %}
+          {% if not form_user.carbrand.errors %}
           <mu-text-field
             label-float
             name="{{form_user.carbrand.label}}"
@@ -110,7 +183,19 @@
             color="amber600"
             full-width label="ยี่ห้อ">
           </mu-text-field><br/>
-          {{form_user.carmodel.errors}}
+          {% endif %}
+
+          {% if form_user.carmodel.errors %}
+          <mu-text-field
+            label-float
+            name="{{form_user.carmodel.label}}"
+            v-model.lazy="carmodel"
+            color="amber600"
+            error-text="กรุณาใส่รุ่นให้ถูกต้อง"
+            full-width label="รุ่น">
+          </mu-text-field><br/>
+          {% endif %}
+          {% if not form_user.carmodel.errors %}
           <mu-text-field
             label-float
             name="{{form_user.carmodel.label}}"
@@ -118,7 +203,19 @@
             color="amber600"
             full-width label="รุ่น">
           </mu-text-field><br/>
-          {{form_user.carcolor.errors}}
+          {% endif %}
+
+          {% if form_user.carcolor.errors %}
+          <mu-text-field
+            label-float
+            name="{{form_user.carcolor.label}}"
+            v-model.lazy="carcolor"
+            color="amber600"
+            error-text="กรุณาใส่สีให้ถูกต้อง"
+            full-width label="สี">
+          </mu-text-field><br/>
+          {% endif %}
+          {% if not form_user.carcolor.errors %}
           <mu-text-field
             label-float
             name="{{form_user.carcolor.label}}"
@@ -126,10 +223,24 @@
             color="amber600"
             full-width label="สี">
           </mu-text-field><br/>
+          {% endif %}
+
+
           <mu-flex justify-content="center">
             <mu-flex justify-content="center" ><mu-icon value="visibility"></mu-icon>ชื่อผู้ใช้และรหัสผ่าน</mu-flex>
           </mu-flex>
-          {{form_user.username.errors}}
+
+          {% if form_user.username.errors %}
+          <mu-text-field
+            label-float
+            v-model.lazy="{{form_user.username.label}}"
+            name="username"
+            color="amber600"
+            error-text="กรุณาใส่ชื่อผู้ใช้ให้ถูกต้อง"
+            full-width label="ชื่อผู้ใช้">
+          </mu-text-field><br/>
+          {% endif %}
+          {% if not form_user.username.errors %}
           <mu-text-field
             label-float
             v-model.lazy="{{form_user.username.label}}"
@@ -137,7 +248,20 @@
             color="amber600"
             full-width label="ชื่อผู้ใช้">
           </mu-text-field><br/>
-          {{form_user.password1.errors}}
+          {% endif %}
+
+          {% if form_user.password1.errors %}
+          <mu-text-field
+            label-float
+            v-model.lazy="{{form_user.password1.label}}"
+            name="password1"
+            color="amber600"
+            type="password"
+            error-text="กรุณาใส่รหัสผ่านให้ถูกต้อง"
+            full-width label="รหัสผ่าน">
+          </mu-text-field><br/>
+          {% endif %}
+          {% if not form_user.password1.errors %}
           <mu-text-field
             label-float
             v-model.lazy="{{form_user.password1.label}}"
@@ -146,7 +270,20 @@
             type="password"
             full-width label="รหัสผ่าน">
           </mu-text-field><br/>
-          {{form_user.password2.errors}}
+          {% endif %}
+
+          {% if form_user.password2.errors %}
+          <mu-text-field
+            label-float
+            v-model.lazy="password2"
+            name="{{form_user.password2.label}}"
+            color="amber600"
+            type="password"
+            error-text="กรุณาใส่รหัสผ่านให้ถูกต้อง"
+            full-width label="ยืนยันรหัสผ่าน">
+          </mu-text-field><br/>
+          {% endif %}
+          {% if not form_user.password2.errors %}
           <mu-text-field
             label-float
             v-model.lazy="password2"
@@ -155,12 +292,13 @@
             type="password"
             full-width label="ยืนยันรหัสผ่าน">
           </mu-text-field><br/>
-          <mu-flex >
-            <mu-checkbox color="amber600" v-model="confirmRegister" label="ข้าพเจ้ายอมรับข้อตกลงและเงื่อนไขการงานของเว็บแอพลิเคชั่นนี้"></mu-checkbox>
-          </mu-flex>
+          {% endif %}
+{#          <mu-flex >#}
+{#            <mu-checkbox color="amber600" v-model="confirmRegister" label="ข้าพเจ้ายอมรับข้อตกลงและเงื่อนไขการงานของเว็บแอพลิเคชั่นนี้"></mu-checkbox>#}
+{#          </mu-flex>#}
           <mu-flex justify-content="center">
             <mu-flex justify-content="center" style="padding-top: 1em;" >
-              <mu-button type="submit" large color="amber500">REGISTER<mu-icon right value="chevron_right"></mu-icon></mu-button>
+              <mu-button type="submit" large color="amber500">สมัครสมาชิก<mu-icon right value="chevron_right"></mu-icon></mu-button>
             </mu-flex>
           </mu-flex>
         </form>

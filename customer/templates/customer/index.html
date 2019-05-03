@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CarparkingMS</title>
+  <title>ระบบจัดการที่จอดรถ | CMS</title>
   {% load static %}
   <link rel="stylesheet" href="https://unpkg.com/muse-ui/dist/muse-ui.css">
   <link href="https://fonts.googleapis.com/css?family=Kanit" rel="stylesheet">
@@ -33,20 +33,24 @@
   {% if user.is_authenticated %}
   <mu-drawer v-if="isLogin" :open.sync="menuOpen" :docked="docked" :right="false">
     <mu-list>
+      <mu-list-item button @click="window.location = '{% url 'index' %}'">
+        <mu-list-item-title>หน้าแรก</mu-list-item-title>
+        <mu-icon right value="home"></mu-icon>
+      </mu-list-item>
       <mu-list-item button @click="window.location = '{% url 'profile' %}'">
-        <mu-list-item-title>Profile</mu-list-item-title>
+        <mu-list-item-title>ข้อมูลผู้ใช้งาน</mu-list-item-title>
         <mu-icon right value="account_circle"></mu-icon>
       </mu-list-item>
       <mu-list-item button @click="window.location = '{% url 'buy_package' %}'">
-        <mu-list-item-title>Buy Package</mu-list-item-title>
+        <mu-list-item-title>เติมพอยท์</mu-list-item-title>
         <mu-icon right value="local_activity"></mu-icon>
       </mu-list-item>
       <mu-divider></mu-divider>
       <mu-list-item button @click="window.location = '{% url 'change_password' %}'">
-        <mu-list-item-title >Change Password</mu-list-item-title>
+        <mu-list-item-title >เปลี่ยนรหัสผ่าน</mu-list-item-title>
       </mu-list-item>
       <mu-list-item button @click="window.location = '{% url 'logout' %}'">
-        <mu-list-item-title style="color: #f44336;">Logout</mu-list-item-title>
+        <mu-list-item-title style="color: #f44336;">ออกจากระบบ</mu-list-item-title>
       </mu-list-item>
     </mu-list>
   </mu-drawer>
@@ -54,12 +58,16 @@
   {% if not user.is_authenticated %}
   <mu-drawer :open.sync="menuOpen" :docked="docked" :right="false">
     <mu-list>
+      <mu-list-item button @click="window.location = '{% url 'index' %}'">
+        <mu-list-item-title>หน้าแรก</mu-list-item-title>
+        <mu-icon right value="home"></mu-icon>
+      </mu-list-item>
       <mu-list-item button @click="window.location = '{% url 'my_login' %}'">
-        <mu-list-item-title>Login</mu-list-item-title>
+        <mu-list-item-title>เข้าสู่ระบบ</mu-list-item-title>
         <mu-icon right value="person"></mu-icon>
       </mu-list-item>
       <mu-list-item button @click="window.location = '{% url 'register' %}'">
-        <mu-list-item-title>Register</mu-list-item-title>
+        <mu-list-item-title>สมัครสมาชิก</mu-list-item-title>
         <mu-icon right value="person_add"></mu-icon>
       </mu-list-item>
     </mu-list>
@@ -81,7 +89,7 @@
           <mu-divider></mu-divider>
 
           <mu-list>
-            <mu-sub-header style="font-size: 18px;">Available</mu-sub-header>
+            <mu-sub-header style="font-size: 18px;">ว่าง</mu-sub-header>
             <mu-list-item avatar>
               <mu-list-item-action avatar>
                 <mu-avatar color="green500">
@@ -93,7 +101,7 @@
               </mu-list-item-content>
             </mu-list-item>
 
-            <mu-sub-header style="font-size: 18px;">Unavailable</mu-sub-header>
+            <mu-sub-header style="font-size: 18px;">ไม่ว่าง</mu-sub-header>
             <mu-list-item avatar>
               <mu-list-item-action avatar>
                 <mu-avatar color="red500">
@@ -115,14 +123,14 @@
     <mu-row v-if="!isReserve" style="padding-top: 1em;">
       <mu-col span="12">
         <mu-flex justify-content="center" align-items="center">
-          <mu-button full-width color="amber500" large @click="openCarSelector">Reserve<mu-icon right value="schedule"></mu-icon></mu-button>
+          <mu-button full-width color="amber500" large @click="openCarSelector">จองที่จอดรถ <mu-icon right value="schedule"></mu-icon></mu-button>
         </mu-flex>
       </mu-col>
     </mu-row>
     <mu-row v-else style="padding-top: 1em;">
       <mu-col span="12">
         <mu-flex justify-content="center" align-items="center">
-          <mu-button full-width color="success" large disabled>Reserve <mu-icon right value="schedule"></mu-icon></mu-button>
+          <mu-button full-width color="success" large disabled>จองที่จอดรถ <mu-icon right value="schedule"></mu-icon></mu-button>
         </mu-flex>
       </mu-col>
     </mu-row>
@@ -131,7 +139,7 @@
     <mu-row style="padding-top: 1em;">
       <mu-col span="12">
         <mu-flex justify-content="center" align-items="center">
-          <mu-button full-width color="success" large disabled>Reserve <mu-icon right value="schedule"></mu-icon></mu-button>
+          <mu-button full-width color="success" large disabled>จองที่จอดรถ <mu-icon right value="schedule"></mu-icon></mu-button>
         </mu-flex>
       </mu-col>
     </mu-row>
@@ -164,11 +172,11 @@
     <mu-list>
       <mu-list-item :key="option.min" v-for="option in options">
         <mu-list-item-content>
-          <mu-radio color="amber500" :label="option.min + ' นาที ( ' + option.point + ' points )'" :value="option" v-model="reserveLimitTime"></mu-radio>
+          <mu-radio color="amber500" :label="option.min + ' นาที ( ' + option.point + ' พอยท์ )'" :value="option" v-model="reserveLimitTime"></mu-radio>
         </mu-list-item-content>
       </mu-list-item>
     </mu-list>
-    <mu-button slot="actions" flat color="amber500" @click="openConfirmDialog()">ok</mu-button>
+    <mu-button slot="actions" flat color="amber500" @click="openConfirmDialog()">ตกลง</mu-button>
   </mu-dialog>
 {#    alert dialog befor reserve area#}
   <mu-dialog
@@ -179,22 +187,22 @@
     :overlay-close="false"
     :open.sync="openConfirm">
     ทำการจองด้วย <b>[[ selectedCar.car_license_number ]] | [[ selectedCar.car_brand ]]</b>
-    เมื่อท่านทำการจองแล้วระบบจะหักPointsของท่านทันทีและไม่สามารถขอคืนPointsได้
+    เมื่อท่านทำการจองแล้วระบบจะหักพอยท์ของท่านทันทีและไม่สามารถขอคืนพอยท์ได้
     ท่านต้องมาถึงจุดแสกนQR Codeภายในเวลา <b>[[ reserveLimitTime.min ]]</b> นาที
     <mu-button slot="actions" flat color="grey400" @click="closeConfirmDialog">ยกเลิก</mu-button>
-    <mu-button slot="actions" flat color="amber500" @click="CountdownReserve">จอง</mu-button>
+    <mu-button slot="actions" flat color="amber500" @click="CountdownReserve">ยืนยัน</mu-button>
   </mu-dialog>
 
 {#  err dialo#}
 
     <mu-dialog
-    title="แต้มของคุณไม่เพียงพอ"
+    title="แต้มของท่านไม่เพียงพอ"
     width="600"
     max-width="80%"
     :esc-press-close="false"
     :overlay-close="false"
     :open.sync="openError">
-    กรุณาเติมแต้มก่อนทำการจอง
+    กรุณาเติมพอยท์ก่อนทำการจอง
     <mu-button slot="actions" flat color="amber500" @click="openError = false">ตกลง</mu-button>
   </mu-dialog>
 
@@ -213,7 +221,7 @@
               </mu-card-media>
             </mu-paper>
           </mu-flex>
-          <mu-card-title :title="'Expired Time: '+expiredTime" sub-title="กรุณาแสกนQR Codeก่อนหมดเวลาในการจอง"></mu-card-title>
+          <mu-card-title :title="'หมดเวลาจอง: '+expiredTime" sub-title="กรุณาแสกนQR Codeก่อนหมดเวลาในการจอง"></mu-card-title>
         </mu-card>
       </mu-col>
     </mu-row>
@@ -300,7 +308,6 @@
             userPoints: user_info[0].point,
             reserveLimitTime: {min: '15', point: '50'},
             options:[
-                {min: '1', point: '50'},
                 {min: '15', point: '50'},
                 {min: '30', point: '100'},
                 {min: '60', point: '200'}

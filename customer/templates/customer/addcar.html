@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Add Car</title>
+  <title>เพิ่มรถยนต์</title>
   {% load static %}
   <link rel="stylesheet" href="https://unpkg.com/muse-ui/dist/muse-ui.css">
   <link href="https://fonts.googleapis.com/css?family=Kanit" rel="stylesheet">
@@ -30,20 +30,24 @@
   {#sidebar#}
   <mu-drawer :open.sync="menuOpen" :docked="docked" :right="false">
     <mu-list>
+      <mu-list-item button @click="window.location = '{% url 'index' %}'">
+        <mu-list-item-title>หน้าแรก</mu-list-item-title>
+        <mu-icon right value="home"></mu-icon>
+      </mu-list-item>
       <mu-list-item button @click="window.location = '{% url 'profile' %}'">
-        <mu-list-item-title>Profile</mu-list-item-title>
+        <mu-list-item-title>ข้อมูลผู้ใช้งาน</mu-list-item-title>
         <mu-icon right value="account_circle"></mu-icon>
       </mu-list-item>
       <mu-list-item button @click="window.location = '{% url 'buy_package' %}'">
-        <mu-list-item-title>Buy Package</mu-list-item-title>
+        <mu-list-item-title>เติมพอยท์</mu-list-item-title>
         <mu-icon right value="local_activity"></mu-icon>
       </mu-list-item>
       <mu-divider></mu-divider>
       <mu-list-item button @click="window.location = '{% url 'change_password' %}'">
-        <mu-list-item-title >Change Password</mu-list-item-title>
+        <mu-list-item-title >เปลี่ยนรหัสผ่าน</mu-list-item-title>
       </mu-list-item>
       <mu-list-item button @click="window.location = '{% url 'logout' %}'">
-        <mu-list-item-title style="color: #f44336;">Logout</mu-list-item-title>
+        <mu-list-item-title style="color: #f44336;">ออกจากระบบ</mu-list-item-title>
       </mu-list-item>
     </mu-list>
   </mu-drawer>
@@ -60,15 +64,38 @@
           <mu-flex justify-content="center">
             <mu-flex justify-content="center" ><mu-icon value="directions_car"></mu-icon>เพิ่มรถยนต์</mu-flex>
           </mu-flex>
-          {{form.carid.errors}}
+
+          {% if form.carid.errors %}
           <mu-text-field
             label-float
             name="{{form.carid.label}}"
             v-model.lazy="carid"
             color="amber600"
-            full-width label="ทะเบียนรถ">
+            error-text="กรุณาใส่ทะเบียนให้ถูกต้อง"
+            full-width label="ทะเบียน">
           </mu-text-field><br/>
-          {{form.carbrand.errors}}
+          {% endif %}
+          {% if not form.carid.errors %}
+          <mu-text-field
+            label-float
+            name="{{form.carid.label}}"
+            v-model.lazy="carid"
+            color="amber600"
+            full-width label="ทะเบียน">
+          </mu-text-field><br/>
+          {% endif %}
+
+          {% if form.carbrand.errors %}
+          <mu-text-field
+            label-float
+            name="{{form.carbrand.label}}"
+            v-model.lazy="carbrand"
+            color="amber600"
+            error-text="กรุณาใส่ยี่ห้อให้ถูกต้อง"
+            full-width label="ยี่ห้อ">
+          </mu-text-field><br/>
+          {% endif %}
+          {% if not form.carbrand.errors %}
           <mu-text-field
             label-float
             name="{{form.carbrand.label}}"
@@ -76,7 +103,19 @@
             color="amber600"
             full-width label="ยี่ห้อ">
           </mu-text-field><br/>
-          {{form.carmodel.errors}}
+          {% endif %}
+
+          {% if form.carmodel.errors %}
+          <mu-text-field
+            label-float
+            name="{{form.carmodel.label}}"
+            v-model.lazy="carmodel"
+            color="amber600"
+            error-text="กรุณาใส่รุ่นให้ถูกต้อง"
+            full-width label="รุ่น">
+          </mu-text-field><br/>
+          {% endif %}
+          {% if not form.carmodel.errors %}
           <mu-text-field
             label-float
             name="{{form.carmodel.label}}"
@@ -84,7 +123,19 @@
             color="amber600"
             full-width label="รุ่น">
           </mu-text-field><br/>
-          {{form.carcolor.errors}}
+          {% endif %}
+
+          {% if form.carcolor.errors %}
+          <mu-text-field
+            label-float
+            name="{{form.carcolor.label}}"
+            v-model.lazy="carcolor"
+            color="amber600"
+            error-text="กรุณาใส่สีให้ถูกต้อง"
+            full-width label="สี">
+          </mu-text-field><br/>
+          {% endif %}
+          {% if not form.carcolor.errors %}
           <mu-text-field
             label-float
             name="{{form.carcolor.label}}"
@@ -92,9 +143,11 @@
             color="amber600"
             full-width label="สี">
           </mu-text-field><br/>
+          {% endif %}
+
           <mu-flex justify-content="center">
             <mu-flex justify-content="center" style="padding-top: 1em;" >
-              <mu-button type="submit" large color="amber500">CONFIRM<mu-icon right value="chevron_right"></mu-icon></mu-button>
+              <mu-button type="submit" large color="amber500">ยืนยัน<mu-icon right value="chevron_right"></mu-icon></mu-button>
             </mu-flex>
           </mu-flex>
         </form>

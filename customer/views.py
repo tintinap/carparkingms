@@ -58,7 +58,7 @@ def my_login(request):
             else:
                 return redirect("index")
         if username!= '' or password!= '':
-            context['error'] = 'Wrong username or password'
+            context['error'] = 'กรุณาระบุชื่อผู้ใช้หรือรหัสผ่านให้ถูกต้อง'
     next_url = request.GET.get('next')
     if next_url:
         context['next_url'] = next_url
@@ -190,27 +190,19 @@ def addcar(request):
 
 @login_required
 def changepassword(request):
-    error = ''
     if request.method == "POST":
-        form = Changepassform(request.POST)
+        form = Changepassform(request, request.POST)
         if form.is_valid():
-            print(3)
             id = request.user.id
             us = User.objects.get(id=id)
-            print(us.check_password(form.cleaned_data.get("oldpassword")))
-            if us.check_password(form.cleaned_data.get("oldpassword")):
-                us.set_password(form.cleaned_data.get("newpassword1"))
-                us.save()
-                return redirect('index')
-            else:
-                error = "old pass didn't match"
-                form = Changepassform()
+            us.set_password(form.cleaned_data.get("newpassword1"))
+            us.save()
+            return redirect('index')
 
     else:
-        form = Changepassform()
+        form = Changepassform(request)
 
-    context = {"form": form,
-               'error': error}
+    context = {"form": form}
     return render(request, 'customer/changepassword.html', context=context)
 
 

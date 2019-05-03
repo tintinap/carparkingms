@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Edit Profile</title>
+  <title>แก้ไขข้อมูลส่วนตัว</title>
   {% load static %}
   <link rel="stylesheet" href="https://unpkg.com/muse-ui/dist/muse-ui.css">
   <link href="https://fonts.googleapis.com/css?family=Kanit" rel="stylesheet">
@@ -30,20 +30,24 @@
   {#sidebar#}
   <mu-drawer :open.sync="menuOpen" :docked="docked" :right="false">
     <mu-list>
+      <mu-list-item button @click="window.location = '{% url 'index' %}'">
+        <mu-list-item-title>หน้าแรก</mu-list-item-title>
+        <mu-icon right value="home"></mu-icon>
+      </mu-list-item>
       <mu-list-item button @click="window.location = '{% url 'profile' %}'">
-        <mu-list-item-title>Profile</mu-list-item-title>
+        <mu-list-item-title>ข้อมูลผู้ใช้งาน</mu-list-item-title>
         <mu-icon right value="account_circle"></mu-icon>
       </mu-list-item>
       <mu-list-item button @click="window.location = '{% url 'buy_package' %}'">
-        <mu-list-item-title>Buy Package</mu-list-item-title>
+        <mu-list-item-title>เติมพอยท์</mu-list-item-title>
         <mu-icon right value="local_activity"></mu-icon>
       </mu-list-item>
       <mu-divider></mu-divider>
       <mu-list-item button @click="window.location = '{% url 'change_password' %}'">
-        <mu-list-item-title >Change Password</mu-list-item-title>
+        <mu-list-item-title >เปลี่ยนรหัสผ่าน</mu-list-item-title>
       </mu-list-item>
       <mu-list-item button @click="window.location = '{% url 'logout' %}'">
-        <mu-list-item-title style="color: #f44336;">Logout</mu-list-item-title>
+        <mu-list-item-title style="color: #f44336;">ออกจากระบบ</mu-list-item-title>
       </mu-list-item>
     </mu-list>
   </mu-drawer>
@@ -55,51 +59,114 @@
         <form method="post" action="{% url 'edit_profile' %}">
           {% csrf_token %}
           <mu-flex justify-content="center">
-            <mu-flex justify-content="center" ><mu-icon value="person"></mu-icon>แก้ไขข้อมูลผู้ใช้</mu-flex>
+            <mu-flex justify-content="center" ><mu-icon value="person"></mu-icon>แก้ไขข้อมูลส่วนตัว</mu-flex>
           </mu-flex>
+
+          {% if form.firstname.errors %}
           <mu-text-field
             label-float
-            name="{{form.firstname.label}}"
-            v-model="firstname"
+            name="firstname"
+            v-model.lazy="{{form.firstname.label}}"
+            color="amber600"
+            error-text="กรุณาใส่ชื่อจริง"
+            full-width label="ชื่อจริง">
+          </mu-text-field><br/>
+          {% endif %}
+          {% if not form.firstname.errors %}
+          <mu-text-field
+            label-float
+            name="firstname"
+            v-model.lazy="{{form.firstname.label}}"
             color="amber600"
             full-width label="ชื่อจริง">
           </mu-text-field><br/>
+          {% endif %}
+
+          {% if form.lastname.errors %}
           <mu-text-field
             label-float
-            name="{{form.lastname.label}}"
-            v-model="lastname"
+            name="lastname"
+            v-model.lazy="{{form.lastname.label}}"
+            color="amber600"
+            error-text="กรุณาใส่นามสกุล"
+            full-width label="นามสกุล">
+          </mu-text-field><br/>
+          {% endif %}
+          {% if not form.lastname.errors %}
+          <mu-text-field
+            label-float
+            name="lastname"
+            v-model.lazy="{{form.lastname.label}}"
             color="amber600"
             full-width label="นามสกุล">
           </mu-text-field><br/>
+          {% endif %}
+
+          {% if form.username.errors %}
           <mu-text-field
             label-float
-            :value="{{form.username.label}}"
-            v-model="username"
-            name="username"
+            v-model.lazy="username"
+            name="{{form.username.label}}"
+            color="amber600"
+            error-text="กรุณาใส่ชื่อผู้ใช้ให้ถูกต้อง"
+            full-width label="ชื่อผู้ใช้">
+          </mu-text-field><br/>
+          {% endif %}
+          {% if not form.username.errors %}
+          <mu-text-field
+            label-float
+            v-model.lazy="username"
+            name="{{form.username.label}}"
             color="amber600"
             full-width label="ชื่อผู้ใช้">
           </mu-text-field><br/>
-          {{form.email.errors}}
+          {% endif %}
+
+          {% if form.email.errors %}
           <mu-text-field
             label-float
             name="{{form.email.label}}"
-            v-model="email"
+            v-model.lazy="email"
             color="amber600"
-            full-width label="Email"
-            suffix="@kmitl.ac.th">
+            error-text="กรุณาใส่อีเมลล์ให้ถูกต้อง"
+            full-width label="อีเมลล์">
           </mu-text-field><br/>
-          {{form.phone.errors}}
+          {% endif %}
+          {% if not form.email.errors %}
+          <mu-text-field
+            label-float
+            name="{{form.email.label}}"
+            v-model.lazy="email"
+            color="amber600"
+            full-width label="อีเมลล์">
+          </mu-text-field><br/>
+          {% endif %}
+
+          {% if form.phone.errors %}
           <mu-text-field
             label-float
             name="{{form.phone.label}}"
-            v-model="phone"
+            v-model.lazy="phone"
             color="amber600"
             full-width label="เบอร์โทรศัพท์"
-            type="number">
+            error-text="กรุณาใส่เบอร์โทรศัพท์ให้ถูกต้อง"
+            type="text">
           </mu-text-field><br/>
+          {% endif %}
+          {% if not form.phone.errors %}
+          <mu-text-field
+            label-float
+            name="{{form.phone.label}}"
+            v-model.lazy="phone"
+            color="amber600"
+            full-width label="เบอร์โทรศัพท์"
+            type="text">
+          </mu-text-field><br/>
+          {% endif %}
+
           <mu-flex justify-content="center">
             <mu-flex justify-content="center" style="padding-top: 1em;" >
-              <mu-button type="submit" large color="amber500">CONFIRM<mu-icon right value="chevron_right"></mu-icon></mu-button>
+              <mu-button type="submit" large color="amber500">ยืนยัน<mu-icon right value="chevron_right"></mu-icon></mu-button>
             </mu-flex>
           </mu-flex>
         </form>

@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.core import validators
 from django.core.exceptions import ValidationError
@@ -29,12 +30,23 @@ class UsernameForm(forms.Form):
         p2 = cleaned_data.get("password2")
         user = list(User.objects.values())
         data = cleaned_data.get("username")
+        phone = cleaned_data.get("phone")
         for i in user:
             if i['username'] == data:
-                raise forms.ValidationError("username ซ้ำ")
+                self.add_error('username', "ชื่อผู้ใช้นี้ถูกใช้ไปแล้ว")
+
+        if p1 is not None:
+            if len(p1) <= 8:
+                self.add_error('password1', "รหัสผ่านต้องมีความยาวมากกว่า 8 ตัวอักษร")
 
         if p1 != p2:
-            raise forms.ValidationError("password not match")
+            self.add_error('password2',"กรุณาใส่รหัสผ่านให้ถูกต้อง")
+
+        if phone is not None:
+            print(phone.isdigit())
+            if len(phone) != 10 or not phone.isdigit() :
+
+                self.add_error('phone', "กรุณาใส่เบอร์โทรศัพท์ให้ถูกต้อง")
 
 class Addcarform(forms.Form):
     carid = forms.CharField(required=True, label="carid")
@@ -51,10 +63,10 @@ class Addcarform(forms.Form):
                 raise forms.ValidationError("carid ซ้ำ")
 
 class Editprofileform(forms.Form):
-    username = forms.CharField(required=True, label="username")
+    username = forms.CharField(label="username", required=True)
     email = forms.CharField(validators=[validators.validate_email], label="email",required=True)
-    firstname = forms.CharField(required=True, label="firstname")
-    lastname = forms.CharField(required=True, label="lastname")
+    firstname = forms.CharField(label="firstname", required=True)
+    lastname = forms.CharField(label="lastname", required=True)
     phone = forms.CharField(max_length=10, label="phone",required=True)
 
 class Changepassform(forms.Form):
@@ -62,29 +74,29 @@ class Changepassform(forms.Form):
     newpassword1 = forms.CharField(required=True, label="newpassword1")
     newpassword2 = forms.CharField(required=True, label="newpassword2")
 
-    def set_old_password_flag(self):
+    def __init__(self, request, *args, **kwargs):
+        self.request = request
+        super(Changepassform, self).__init__(*args, **kwargs)
 
-        # This method is called if the old password entered by user does not match the password in the database, which sets the flag to False
-
-        self.old_password_flag = False
-
-        return 0
-
-    def clean_old_password(self, *args, **kwargs):
-        old_password = self.cleaned_data.get('oldpassword')
-
-        if self.old_password_flag == False:
-            # It raise the validation error that password entered by user does not match the actucal old password.
-
-            raise forms.ValidationError("The old password that you have entered is wrong.")
-
-        return old_password
     def clean(self):
         cleaned_data = super().clean()
         pa = cleaned_data.get("newpassword1")
         repa = cleaned_data.get("newpassword2")
-        old_password = cleaned_data.get('oldpassword')
+        oldpassword = cleaned_data.get('oldpassword')
 
+        user = authenticate(self.request, username=self.request.user.username, password=oldpassword)
+
+        if not user:
+            self.add_error('oldpassword','รหัสผ่านเก่าไม่ถูกต้อง')
+
+        if pa is not None:
+            if(len(pa) <= 8):
+                self.add_error('newpassword1', "รหัสผ่านต้องมีความยาวมากกว่า 8 ตัวอักษร")
+
+        if repa is not None:
+            if(len(repa) <= 8):
+                self.add_error('newpassword2', "รหัสผ่านต้องมีความยาวมากกว่า 8 ตัวอักษร")
 
         if pa != repa:
-            raise forms.ValidationError("password didn't match")
+            self.add_error('newpassword1', "กรุณาใส่รหัสผ่านให้ตรงกัน")
+            self.add_error('newpassword2', "กรุณาใส่รหัสผ่านให้ตรงกัน")

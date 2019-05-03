@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Profile</title>
+  <title>ข้อมูลผู้ใช้งาน</title>
   {% load static %}
   <link rel="stylesheet" href="https://unpkg.com/muse-ui/dist/muse-ui.css">
   <link href="https://fonts.googleapis.com/css?family=Kanit" rel="stylesheet">
@@ -30,20 +30,24 @@
   {#sidebar#}
   <mu-drawer :open.sync="menuOpen" :docked="docked" :right="false">
     <mu-list>
+      <mu-list-item button @click="window.location = '{% url 'index' %}'">
+        <mu-list-item-title>หน้าแรก</mu-list-item-title>
+        <mu-icon right value="home"></mu-icon>
+      </mu-list-item>
       <mu-list-item button @click="window.location = '{% url 'profile' %}'">
-        <mu-list-item-title>Profile</mu-list-item-title>
+        <mu-list-item-title>ข้อมูลผู้ใช้งาน</mu-list-item-title>
         <mu-icon right value="account_circle"></mu-icon>
       </mu-list-item>
       <mu-list-item button @click="window.location = '{% url 'buy_package' %}'">
-        <mu-list-item-title>Buy Package</mu-list-item-title>
+        <mu-list-item-title>เติมพอยท์</mu-list-item-title>
         <mu-icon right value="local_activity"></mu-icon>
       </mu-list-item>
       <mu-divider></mu-divider>
       <mu-list-item button @click="window.location = '{% url 'change_password' %}'">
-        <mu-list-item-title >Change Password</mu-list-item-title>
+        <mu-list-item-title >เปลี่ยนรหัสผ่าน</mu-list-item-title>
       </mu-list-item>
       <mu-list-item button @click="window.location = '{% url 'logout' %}'">
-        <mu-list-item-title style="color: #f44336;">Logout</mu-list-item-title>
+        <mu-list-item-title style="color: #f44336;">ออกจากระบบ</mu-list-item-title>
       </mu-list-item>
     </mu-list>
   </mu-drawer>
@@ -72,10 +76,10 @@
       <mu-col span="12">
         <mu-tabs :value.sync="activetabs" color="amber500" indicator-color="grey50" full-width >
           <mu-tab>
-            <mu-icon value="person"></mu-icon>Profile
+            <mu-icon value="person"></mu-icon>ข้อมูลส่วนตัว
           </mu-tab>
           <mu-tab>
-            <mu-icon value="directions_car"></mu-icon>Cars
+            <mu-icon value="directions_car"></mu-icon>ข้อมูลรถ
           </mu-tab>
         </mu-tabs>
       </mu-col>
@@ -100,7 +104,7 @@
                   <mu-divider></mu-divider>
                   <mu-card-text>
                     <mu-list style="margin-top: -1em;">
-                      <mu-sub-header inset>Email</mu-sub-header>
+                      <mu-sub-header inset>อีเมลล์</mu-sub-header>
                       <mu-list-item avatar>
                         <mu-list-item-action avatar>
                           <mu-avatar>
@@ -111,7 +115,7 @@
                           <mu-list-item-title>[[ email ]]</mu-list-item-title>
                         </mu-list-item-content>
                       </mu-list-item>
-                      <mu-sub-header inset>Phone</mu-sub-header>
+                      <mu-sub-header inset>เบอร์โทรศัพท์</mu-sub-header>
                       <mu-list-item avatar>
                         <mu-list-item-action avatar>
                           <mu-avatar>
@@ -133,7 +137,7 @@
             <mu-row style="padding-top: 1em;">
               <mu-col span="12">
                 <mu-button color="amber500" large full-width @click="window.location = '{% url 'edit_profile' %}'">
-                  แก้ไขข้อมูลผู้ใช้
+                  แก้ไขข้อมูลส่วนตัว
                   <mu-icon right value="edit"></mu-icon>
                 </mu-button>
               </mu-col>
@@ -151,17 +155,17 @@
                   <div slot="header">
                     <mu-flex align-items="center">
                       <mu-flex justify-content="center" fill><mu-avatar color="amber500" size="30"><mu-icon value="directions_car"></mu-icon></mu-avatar></mu-flex>
-                    <mu-flex style="padding-left: 1em;" justify-content="center" fill>[[ car.car_brand ]]</mu-flex>
+                    <mu-flex style="padding-left: 1em;" justify-content="center" fill>[[ car.car_license_number ]]</mu-flex>
                     </mu-flex>
                   </div>
                   <div>
                     <mu-flex justify-content="start">
-                      <mu-flex justify-content="center">หมายเลขทะเบียน</mu-flex>
+                      <mu-flex justify-content="center">ยี่ห้อ</mu-flex>
                     </mu-flex>
                   </div>
-                  <div style="font-size: 2em;">
+                  <div style="font-size: 1.5em;">
                     <mu-flex justify-content="start">
-                      <mu-flex justify-content="center">[[ car.car_license_number ]]</mu-flex>
+                      <mu-flex justify-content="center">[[ car.car_brand ]]</mu-flex>
                     </mu-flex>
                   </div>
                   <div>
