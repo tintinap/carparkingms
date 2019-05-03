@@ -38,6 +38,9 @@ def index(request):
 
 
 def my_login(request):
+    user=''
+    username=''
+    password=''
     context = {}
     form = LoginForm()
     if request.method == 'POST':
@@ -45,7 +48,7 @@ def my_login(request):
         if form.is_valid():
             username = form.cleaned_data.get("username")
             password = form.cleaned_data.get("password")
-        user = authenticate(request, username=username, password=password)
+            user = authenticate(request, username=username, password=password)
         if user:
             login(request, user)
 
@@ -54,17 +57,12 @@ def my_login(request):
                 return redirect(next_url)
             else:
                 return redirect("index")
-        else:
-            context['username'] = username
-            context['password'] = password
-            context['error'] = 'Wrong username or password'
+        if username!= '' or password!= '':
+            context['error'] = 'กรุณาระบุชื่อผู้ใช้หรือรหัสผ่านให้ถูกต้อง'
     next_url = request.GET.get('next')
     if next_url:
         context['next_url'] = next_url
-    context = {
-        'form': form
-    }
-    print(form)
+    context['form'] = form
     return render(request, 'customer/login.html', context=context)
 
 
@@ -174,13 +172,13 @@ def addcar(request):
         id = request.user.id
         u = User_sys.objects.get(user_id=id)
         user = Register_user.objects.get(user_id=u.id)
-        form_user = Addcarform(request.POST)
-        if form_user.is_valid():
+        form = Addcarform(request.POST)
+        if form.is_valid():
             car_ob = Car.objects.create(
-                car_license_number=form_user.cleaned_data.get("carid"),
-                car_brand=form_user.cleaned_data.get("carbrand"),
-                car_model=form_user.cleaned_data.get("carmodel"),
-                car_color=form_user.cleaned_data.get("carcolor"),
+                car_license_number=form.cleaned_data.get("carid"),
+                car_brand=form.cleaned_data.get("carbrand"),
+                car_model=form.cleaned_data.get("carmodel"),
+                car_color=form.cleaned_data.get("carcolor"),
                 register_user=user
             )
             return redirect('profile')
@@ -192,27 +190,19 @@ def addcar(request):
 
 @login_required
 def changepassword(request):
-    error = ''
     if request.method == "POST":
-        form = Changepassform(request.POST)
+        form = Changepassform(request, request.POST)
         if form.is_valid():
-            print(3)
             id = request.user.id
             us = User.objects.get(id=id)
-            print(us.check_password(form.cleaned_data.get("oldpassword")))
-            if us.check_password(form.cleaned_data.get("oldpassword")):
-                us.set_password(form.cleaned_data.get("newpassword1"))
-                us.save()
-                return redirect('index')
-            else:
-                error = "old pass didn't match"
-                form = Changepassform()
+            us.set_password(form.cleaned_data.get("newpassword1"))
+            us.save()
+            return redirect('index')
 
     else:
-        form = Changepassform()
+        form = Changepassform(request)
 
-    context = {"form": form,
-               'error': error}
+    context = {"form": form}
     return render(request, 'customer/changepassword.html', context=context)
 
 

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login</title>
+  <title>เข้าสู่ระบบ</title>
   {% load static %}
   <link rel="stylesheet" href="https://unpkg.com/muse-ui/dist/muse-ui.css">
   <link href="https://fonts.googleapis.com/css?family=Kanit" rel="stylesheet">
@@ -13,7 +13,7 @@
     font-family: 'Kanit', sans-serif;
   }
   .errorlist{
-    color:red;
+    color:  #f44336;
     }
   </style>
 </head>
@@ -33,12 +33,16 @@
   {#sidebar#}
   <mu-drawer :open.sync="menuOpen" :docked="docked" :right="false">
     <mu-list>
+      <mu-list-item button @click="window.location = '{% url 'index' %}'">
+        <mu-list-item-title>หน้าแรก</mu-list-item-title>
+        <mu-icon right value="home"></mu-icon>
+      </mu-list-item>
       <mu-list-item button @click="window.location = '{% url 'my_login' %}'">
-        <mu-list-item-title>Login</mu-list-item-title>
+        <mu-list-item-title>เข้าสู่ระบบ</mu-list-item-title>
         <mu-icon right value="person"></mu-icon>
       </mu-list-item>
       <mu-list-item button @click="window.location = '{% url 'register' %}'">
-        <mu-list-item-title>Register</mu-list-item-title>
+        <mu-list-item-title>สมัครสมาชิก</mu-list-item-title>
         <mu-icon right value="person_add"></mu-icon>
       </mu-list-item>
     </mu-list>
@@ -58,7 +62,40 @@
       </mu-col>
     </mu-row>
     <mu-row style="padding-top: 1em;">
-      <mu-col span="12">
+      <mu-col span="12" style="text-align: center;">
+        {% if error %}
+          <p class="errorlist">{{error}}</p>
+                  <form method="post" action="{% url 'my_login' %}">
+          {% csrf_token %}
+          <mu-text-field
+            :value="username"
+            v-model.lazy="username"
+            name="{{form.username.label}}"
+            color="amber600"
+            icon="account_circle"
+            full-width label="ชื่อผู้ใช้"
+            error-text="กรุณาใส่ชื่อผู้ใช้ให้ถูกต้อง"
+            placeholder="กรุณาใส่ชื่อผู้ใช้">
+          </mu-text-field><br/>
+          <mu-text-field
+            :value="password"
+            v-model.lazy="password"
+            type="password"
+            name="{{form.password.label}}"
+            color="amber600"
+            icon="locked"
+            full-width label="รหัสผ่าน"
+            error-text="กรุณาใส่รหัสผ่านให้ถูกต้อง"
+            placeholder="กรุณาใส่รหัสผ่าน">
+          </mu-text-field><br/>
+          <mu-flex justify-content="center">
+            <mu-flex justify-content="center" >
+              <mu-button type="submit" large color="amber500">เข้าสู่ระบบ<mu-icon right value="chevron_right"></mu-icon></mu-button>
+            </mu-flex>
+          </mu-flex>
+        </form>
+        {% endif %}
+        {% if not error %}
         <form method="post" action="{% url 'my_login' %}">
           {% csrf_token %}
           <mu-text-field
@@ -82,14 +119,11 @@
           </mu-text-field><br/>
           <mu-flex justify-content="center">
             <mu-flex justify-content="center" >
-              {% if error %}
-                    <p class="errorlist">{{error}}</p>
-            {% endif %}
-<!--              แก้แสดงผลerror-->
-              <mu-button type="submit" large color="amber500">LOGIN<mu-icon right value="chevron_right"></mu-icon></mu-button>
+              <mu-button type="submit" large color="amber500">เข้าสู่ระบบ<mu-icon right value="chevron_right"></mu-icon></mu-button>
             </mu-flex>
           </mu-flex>
         </form>
+        {% endif %}
       </mu-col>
     </mu-row>
   </mu-container>
@@ -118,6 +152,7 @@
 {#script area#}
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>
 <script src="https://unpkg.com/muse-ui/dist/muse-ui.js"></script>
+
 
 <script>
   var app = new Vue({
