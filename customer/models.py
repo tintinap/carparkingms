@@ -10,6 +10,7 @@ class Parking_zone(models.Model):
 class Parking_slot(models.Model):
     status = models.BooleanField(null=False)
     parking_zone = models.ForeignKey(Parking_zone,models.PROTECT)
+    reservation = models.ManyToManyField('Reservation')
 
 
 class Parking(models.Model):
@@ -17,7 +18,6 @@ class Parking(models.Model):
     leave_at = models.DateField(null=True)
     parking_zone = models.ForeignKey(Parking_zone, models.PROTECT)
     parking_slot = models.ForeignKey(Parking_slot, models.PROTECT)
-    reservation = models.ManyToManyField('Reservation')
 
 class Reservation(models.Model):
     TYPES = (
@@ -49,3 +49,17 @@ class Car(models.Model):
     car_model = models.CharField(max_length=100)
     car_color = models.CharField(max_length=50)
 # Create your models here.
+class Regist_user(models.Model):
+    username = models.CharField(max_length=255)
+    user_fname = models.CharField(max_length=255)
+    user_lname = models.CharField(max_length=255)
+    password = models.CharField(max_length=255)
+    phone_number = models.CharField(max_length=10)
+    point = models.IntegerField()
+    user = models.ForeignKey(User_sys, models.PROTECT)
+class user(models.Model):
+    TYPES = (
+        ('re', 'register_user'),
+        ('gu', 'guess_user')
+    )
+    type = models.CharField(choices=TYPES, default='gu', max_length=2)
