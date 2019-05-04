@@ -219,6 +219,11 @@
               <mu-card-media>
                 <div id="qrcode"></div>
               </mu-card-media>
+              <mu-flex justify-content="center">
+                <mu-flex justify-content="center">
+                  <h2>จอดที่ช่อง [[slot_id]]</h2>
+                </mu-flex>
+              </mu-flex>
             </mu-paper>
           </mu-flex>
           <mu-card-title :title="'หมดเวลาจอง: '+expiredTime" sub-title="กรุณาแสกนQR Codeก่อนหมดเวลาในการจอง"></mu-card-title>
@@ -246,7 +251,6 @@
       </mu-col>
     </mu-row>
     <br/>
-    [[slot_id]]
   </mu-container>
 
 {#  footer area#}
@@ -313,7 +317,6 @@
                 {min: '60', point: '200'}
             ],
             openLimitTime: false,
-            slot_id : '',
             modal: false,
         })
     },
@@ -444,6 +447,9 @@
                 }
             }
             return reserveState;
+        },
+        slot_id() {
+            return (JSON.parse(localStorage.getItem('parking_lot'))).data.parking[0].id;
         }
     },
     mounted() {
