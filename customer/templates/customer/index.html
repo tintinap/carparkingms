@@ -49,7 +49,7 @@
       <mu-list-item button @click="window.location = '{% url 'change_password' %}'">
         <mu-list-item-title >เปลี่ยนรหัสผ่าน</mu-list-item-title>
       </mu-list-item>
-      <mu-list-item button @click="window.location = '{% url 'logout' %}'">
+      <mu-list-item button @click="logout">
         <mu-list-item-title style="color: #f44336;">ออกจากระบบ</mu-list-item-title>
       </mu-list-item>
     </mu-list>
@@ -408,7 +408,11 @@
           //ReserveState Here
           localStorage.setItem("isReserve", JSON.stringify(true));
 
-           
+      },
+      logout() {
+          localStorage.setItem("isReserve", JSON.stringify(false));
+          window.location = '{% url 'logout' %}';
+
       }
     },
     computed: {
