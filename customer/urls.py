@@ -12,4 +12,5 @@ urlpatterns = [
     path('add_car/', views.addcar, name='add_car'),
     path('change_password/', views.changepassword, name='change_password'),
     path('api_index/', views.api_index, name='api_index'),
+    path('api_index/', views.api_index, name='api_index'),
 ]
