@@ -15,7 +15,7 @@ def index(request):
         id = request.user.id
         u = list(User_sys.objects.filter(user_id=id).values())
         user_list = list(Register_user.objects.filter(user_id=u[0]['id']).values())
-        user_car_list = list(Car.objects.filter(register_user_id=u[0]['id']).values())
+        user_car_list = list(Car.objects.filter(register_user_id=user_list[0]['id']).values())
         park = []
 
 
@@ -31,8 +31,6 @@ def index(request):
         'car_in': user_car_list
 
     }
-    print(park)
-    print(context['park_slot'])
 
     return render(request, 'customer/index.html', context=context)
 
@@ -211,11 +209,6 @@ def my_logout(requset):
     logout(requset)
     return redirect('index')
 
-
-def reserve(requset, token):
-    print(1)
-    print(requset.body)
-
 def api_index(request):
     if request.method == 'POST':
         id = request.user.id
@@ -224,6 +217,9 @@ def api_index(request):
         user_car_list = list(Car.objects.filter(register_user_id=u[0]['id']).values())
         reserve_info = json.loads(request.body)
         slot = list(Parking_slot.objects.values())
+
+
+
         for i in slot:
             if i['status']:
                 break
@@ -246,9 +242,13 @@ def api_index(request):
         reserve = Reservation.objects.create(
             reserve_status="re",
             reserve_token=reserve_info['token_auth'],
-            reserve_at=reserve_info['timestamp']
+            reserve_at=reserve_info['timestamp'],
+            parking_slot=park_ing,
         )
-        park = list(Parking_slot.objects.filter(id=park_ing.id).values())
+
+        p_slot.reservation.add(reserve)
+
+        park = list(Parking_slot.objects.filter(id=park_ing.parking_slot_id).values())
         parking_list = list(Parking_zone.objects.values())
         context = {
             'park_slot': park,
@@ -256,8 +256,91 @@ def api_index(request):
             'user_in': user_list,
             'car_in': user_car_list
         }
-        print(context['park_slot'])
 
-        print(json.dumps(context))
+        return JsonResponse(context, status=200)
+
+def parking(request,p_token):
+    context=[]
+    if request.method == 'POST':
+        parking = list(Parking.objects.values())
+        check_token = 0
+        for i in parking:
+            if i['parking_token'] == p_token:
+                check_token +=1
+                break
+        if check_token==0:
+            slot = list(Parking_slot.objects.values())
+            for i in slot:
+                if i['status']:
+                    break
+            p_slot = Parking_slot.objects.get(id=i['id'])
+            p_zone = Parking_zone.objects.get(id=i['parking_zone_id'])
+
+            p_slot.status = 0
+            p_slot.save()
+
+            p_zone.available -= 1
+            p_zone.save()
+
+            park_ing = Parking.objects.create(
+                parking_slot=p_slot,
+                parking_zone=p_zone,
+                parking_token=p_token
+            )
+            park = list(Parking_slot.objects.filter(id=park_ing.parking_slot_id).values())
+            context = {
+                'park_slot': park,
+            }
+        else:
+            p_slot = Parking_slot.objects.get(id=i['parking_slot_id'])
+            p_zone = Parking_zone.objects.get(id=i['parking_zone_id'])
+
+            p_slot.status = 1
+            p_slot.save()
+
+            p_zone.available += 1
+            p_zone.save()
+
+
+        return JsonResponse(context, status=200)
+
+def reserve(request,r_token):
+    if request.method == 'POST':
+
+        parking = list(Reservation.objects.values())
+        check_token = 0
+        for i in parking:
+            if i['parking_token'] == r_token:
+                check_token += 1
+                break
+        if check_token == 0:
+            u = list(User_sys.objects.filter(user_id=request.user.id).values())
+            user_list = Register_user.objects.get(user_id=u[0]['id'])
+            user_list.point += 25
+            user_list.save()
+
+            reser = list(Reservation.objects.get(reserve_token=r_token).parking_slot_set.all())
+
+            p_slot = Parking_slot.objects.get(id=reser[0].id)
+            p_zone = Parking_zone.objects.get(id=reser[0].parking_zone_id)
+
+            park_ing = Parking.objects.create(
+                parking_slot=p_slot,
+                parking_zone=p_zone,
+                parking_token=r_token
+            )
+            park = list(Parking_slot.objects.filter(id=park_ing.parking_slot_id).values())
+            context = {
+                'park_slot': park,
+            }
+        else:
+            p_slot = Parking_slot.objects.get(id=i['parking_slot_id'])
+            p_zone = Parking_zone.objects.get(id=i['parking_zone_id'])
+
+            p_slot.status = 1
+            p_slot.save()
+
+            p_zone.available += 1
+            p_zone.save()
 
         return JsonResponse(context, status=200)

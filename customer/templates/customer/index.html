@@ -282,7 +282,7 @@
 <script src="{% static 'js/js.cookie.js' %}"></script>
 
 <script type='text/javascript'>
-    var slot = {{ park_slot}};
+    var slot = {{ park_slot|safe}};
     var park = {{ parking|safe }};
     var car_info = {{car_in|safe}};
     var user_info = {{user_in|safe}};

@@ -18,6 +18,7 @@ class Parking(models.Model):
     leave_at = models.DateField(null=True)
     parking_zone = models.ForeignKey(Parking_zone, models.PROTECT)
     parking_slot = models.ForeignKey(Parking_slot, models.PROTECT)
+    parking_token = models.CharField(max_length=255,null=True)
 
 class Reservation(models.Model):
     TYPES = (
