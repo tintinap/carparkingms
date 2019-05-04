@@ -20,15 +20,7 @@ class Parking(models.Model):
     parking_slot = models.ForeignKey(Parking_slot, models.PROTECT)
     parking_token = models.CharField(max_length=255,null=True)
 
-class Reservation(models.Model):
-    TYPES = (
-        ('re', 'reserved'),
-        ('ca', 'cancle')
-    )
 
-    reserve_status = models.CharField(choices=TYPES,default='re',max_length=2)
-    reserve_token = models.CharField(max_length=64)
-    reserve_at = models.DateField()
 
 class User_sys(models.Model):
     user = models.OneToOneField('auth.User', on_delete=models.CASCADE)
@@ -42,6 +34,18 @@ class Register_user(models.Model):
     phone_number = models.CharField(max_length=10)
     point = models.IntegerField()
     user = models.ForeignKey(User_sys, models.PROTECT)
+
+class Reservation(models.Model):
+    TYPES = (
+        ('re', 'reserved'),
+        ('ca', 'cancle')
+    )
+
+    reserve_status = models.CharField(choices=TYPES,default='re',max_length=2)
+    reserve_token = models.CharField(max_length=64)
+    reserve_at = models.DateField()
+    register_user = models.ForeignKey(Register_user, models.PROTECT)
+
 
 class Car(models.Model):
     register_user = models.ForeignKey(Register_user,models.PROTECT)
