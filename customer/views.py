@@ -239,11 +239,14 @@ def api_index(request):
             parking_slot=p_slot,
             parking_zone=p_zone,
         )
+        re_u = Register_user.objects.get(user_id=u[0]['id'])
+        print(re_u)
         reserve = Reservation.objects.create(
             reserve_status="re",
             reserve_token=reserve_info['token_auth'],
             reserve_at=reserve_info['timestamp'],
             parking_slot=park_ing,
+            register_user=re_u
         )
 
         p_slot.reservation.add(reserve)
