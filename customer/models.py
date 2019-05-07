@@ -1,5 +1,8 @@
 from django.db import models
 # คนมีpointเพิ่ม
+from django.utils.encoding import force_text
+
+
 class Parking_zone(models.Model):
     name = models.CharField(max_length=255)
     capacity = models.IntegerField()
@@ -11,6 +14,8 @@ class Parking_slot(models.Model):
     status = models.BooleanField(null=False)
     parking_zone = models.ForeignKey(Parking_zone,models.PROTECT)
     reservation = models.ManyToManyField('Reservation')
+    def __str__(self):
+        return force_text(self.id)
 
 
 class Parking(models.Model):
@@ -29,11 +34,17 @@ class User_sys(models.Model):
         ('gu', 'guess_user')
     )
     type = models.CharField(choices=TYPES,default='gu',max_length=2)
+    def __str__(self):
+        return force_text(self.user.username)
 
 class Register_user(models.Model):
     phone_number = models.CharField(max_length=10)
     point = models.IntegerField()
     user = models.ForeignKey(User_sys, models.PROTECT)
+
+    def __str__(self):
+        return force_text(self.id)
+
 
 class Reservation(models.Model):
     TYPES = (

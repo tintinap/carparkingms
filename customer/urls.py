@@ -14,4 +14,5 @@ urlpatterns = [
     path('api_index/', views.api_index, name='api_index'),
     path('reserve/<r_token>', views.reserve, name='reserve'),
     path('parking/<p_token>', views.parking, name='parking'),
+    path('expired/', views.expired, name='expired'),
 ]

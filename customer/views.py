@@ -1,7 +1,8 @@
 import json
 
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect
@@ -209,6 +210,7 @@ def my_logout(requset):
     logout(requset)
     return redirect('index')
 
+@login_required
 def api_index(request):
     if request.method == 'POST':
         id = request.user.id
@@ -262,6 +264,8 @@ def api_index(request):
 
         return JsonResponse(context, status=200)
 
+@login_required
+@user_passes_test(lambda u: u.is_staff)
 def parking(request,p_token):
     context={}
     parking = list(Parking.objects.values())
@@ -306,6 +310,8 @@ def parking(request,p_token):
 
     return JsonResponse(context, status=200)
 
+@login_required
+@user_passes_test(lambda u: u.is_staff)
 def reserve(request,r_token):
     context={
         'park_slot':[]
@@ -347,3 +353,28 @@ def reserve(request,r_token):
         p_zone.save()
 
     return JsonResponse(context, status=200)
+
+def expired(request):
+    check_token = 0
+    reserve_info = json.loads(request.body)
+    park = Parking.objects.get()
+    for i in parking:
+        if i.parking_token == reserve_info['token']:
+            check_token += 1
+            break
+    if check_token == 0:
+        re = Reservation.objects.get(reserve_token=reserve_info['token'])
+        p_slot = Parking_slot.objects.get(id=reserve_info['p_id'])
+        p_zone = Parking_zone.objects.get(id=p_slot.parking_zone_id)
+
+        re.reserve_status = "ca"
+        re.save()
+
+        p_slot.status = 1
+        p_slot.save()
+
+        p_zone.available += 1
+        p_zone.save()
+
+
+    return JsonResponse(status=200)
