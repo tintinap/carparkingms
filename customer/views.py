@@ -355,10 +355,11 @@ def reserve(request,r_token):
 def expired(request):
     check_token = 0
     reserve_info = json.loads(request.body)
+    print(reserve_info)
     park = Parking.objects.get()
-    for i in parking:
-        if i.parking_token == reserve_info['token']:
-            check_token += 1
+    for i in park:
+        if i.parking_token == reserve_info.token:
+            check_token = 1
             break
     if check_token == 0:
         re = Reservation.objects.get(reserve_token=reserve_info['token'])

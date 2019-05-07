@@ -452,19 +452,19 @@
             }
             else{
                 if(JSON.parse(localStorage.getItem("token_auth")).expiredTime < dateTime){
-
-                    var toldExpired = 'http://127.0.0.1:8000/expired/'+JSON.parse(localStorage.getItem("token_auth")).token_auth+'/'+JSON.parse(localStorage.getItem("parking_lot")).data.park_slot[0].id;
-
-                    axios.post('http://127.0.0.1:8000/expired/',
-                        {token:JSON.parse(localStorage.getItem("token_auth")).token_auth,
-                        p_id:JSON.parse(localStorage.getItem("parking_lot")).data.park_slot[0].id},
-                    {headers:{'X-CSRFTOKEN':csrftoken}}
+                    axios.post(
+                        'http://127.0.0.1:8000/expired/',
+                        {
+                            token:JSON.parse(localStorage.getItem("token_auth")).token_auth,
+                            p_id:JSON.parse(localStorage.getItem("parking_lot")).data.park_slot[0].id
+                        },
+                        {
+                            headers:{'X-CSRFTOKEN':csrftoken}
+                        }
                 )
                 .then(response => {
                     console.log(1)
                     console.log(response)
-                    localStorage.setItem("parking_lot", JSON.stringify(response))
-                    setTimeout(function(){ window.location.reload(true);}, 600);
                 })
                 .catch(error => {
                     console.log(2)
