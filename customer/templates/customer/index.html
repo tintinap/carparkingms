@@ -14,11 +14,8 @@
   }
   </style>
 </head>
-<body>
+<body onload="loading()">
 <div id="indexpage">
-{#<div id="modal" style="position: sticky; bottom: 0;top: 0;left: 0;right: 0;z-index: 2000;background-color: red">#}
-{#  <p>LOADING</p>#}
-{#</div>#}
   <header>
     <mu-appbar style="width: 100%;position: fixed;" color="amber500"  z-depth="0">
       <mu-flex justify-content="start">
@@ -73,6 +70,15 @@
     </mu-list>
   </mu-drawer>
   {%endif%}
+
+{#  loading#}
+  <div id="modal" style="position: fixed; bottom: 0;top: 0;left: 0;right: 0;z-index: 2000;background-color: #fafafa">
+    <div style="text-align: center;margin-top: 22em;">
+      <mu-fade-transition>
+        <mu-circular-progress v-show="loadingwait" class="demo-circular-progress" :size="64" :stroke-width="5" color="amber500"></mu-circular-progress>
+      </mu-fade-transition>
+    </div>
+  </div>
 
   {#MainContent#}
   <mu-container fluid="true" style="padding-top: 5em;">
@@ -319,6 +325,7 @@
             ],
             openLimitTime: false,
             modal: false,
+            loadingwait: true,
         })
     },
     methods: {
@@ -523,8 +530,12 @@
 
     function loading() {
         setTimeout(function () {
-            document.getElementById('modal').style.display='none';
-        }, 600)
+            {#document.getElementById('modal').style.display='none';#}
+            app.loadingwait = false;
+            setTimeout(function () {
+              document.getElementById('modal').style.display='none';
+            }, 500);
+        }, 1000);
     }
 
 </script>

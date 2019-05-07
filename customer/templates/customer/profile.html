@@ -14,7 +14,7 @@
   }
   </style>
 </head>
-<body>
+<body onload="loading()">
 
 <div id="profilepage">
   <header>
@@ -51,6 +51,15 @@
       </mu-list-item>
     </mu-list>
   </mu-drawer>
+
+  {#  loading#}
+  <div id="modal" style="position: fixed; bottom: 0;top: 0;left: 0;right: 0;z-index: 2000;background-color: #fafafa">
+    <div style="text-align: center;margin-top: 22em;">
+      <mu-fade-transition>
+        <mu-circular-progress v-show="loadingwait" class="demo-circular-progress" :size="64" :stroke-width="5" color="amber500"></mu-circular-progress>
+      </mu-fade-transition>
+    </div>
+  </div>
 
   {#MainContent#}
   <mu-container fluid="true" style="background-color: #ffc107; padding-top: 5em;">
@@ -250,10 +259,23 @@
             username: user_in[0].username,
             email: user_in[0].email,
             phone: user_info[0].phone_number,
-            userCar: car_info
+            userCar: car_info,
+            loadingwait: true,
         })
     }
   })
+</script>
+
+<script>
+    function loading() {
+        setTimeout(function () {
+            {#document.getElementById('modal').style.display='none';#}
+            app.loadingwait = false;
+            setTimeout(function () {
+              document.getElementById('modal').style.display='none';
+            }, 500);
+        }, 1000);
+    }
 </script>
 
 </body>

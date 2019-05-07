@@ -50,17 +50,15 @@ def my_login(request):
             user = authenticate(request, username=username, password=password)
         if user:
             login(request, user)
-
-            next_url = request.POST.get('next_url')
-            if next_url:
-                return redirect(next_url)
+            if request.user.is_staff:
+                return redirect("admin:index")
             else:
                 return redirect("index")
         if username!= '' or password!= '':
             context['error'] = 'กรุณาระบุชื่อผู้ใช้หรือรหัสผ่านให้ถูกต้อง'
-    next_url = request.GET.get('next')
-    if next_url:
-        context['next_url'] = next_url
+    elif request.method == 'GET':
+        if (request.user.is_authenticated):
+            return redirect("index")
     context['form'] = form
     return render(request, 'customer/login.html', context=context)
 
