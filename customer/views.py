@@ -356,12 +356,17 @@ def expired(request):
     check_token = 0
     reserve_info = json.loads(request.body)
     print(reserve_info)
-    park = Parking.objects.get()
+    print(3)
+    park = list(Parking.objects.values())
+    print(4)
     for i in park:
-        if i.parking_token == reserve_info.token:
+        if i['parking_token'] == reserve_info['token']:
+            print(5)
             check_token = 1
             break
+    print(2)
     if check_token == 0:
+        print(1)
         re = Reservation.objects.get(reserve_token=reserve_info['token'])
         p_slot = Parking_slot.objects.get(id=reserve_info['p_id'])
         p_zone = Parking_zone.objects.get(id=p_slot.parking_zone_id)
@@ -374,6 +379,6 @@ def expired(request):
 
         p_zone.available += 1
         p_zone.save()
+    context={}
 
-
-    return JsonResponse(status=200)
+    return JsonResponse(context,status=200)

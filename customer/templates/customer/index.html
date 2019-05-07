@@ -492,7 +492,7 @@
           localStorage.setItem("isReserve", "false");
           setTimeout(function(){ window.location.reload(true);}, 600);
         } else {
-            if(localStorage.getItem(isKey) == "false"){
+          if(window.localStorage.getItem('isReserve') == "false"){
                           //create token area
                 var rand = function() {
                   return Math.random().toString(36).substr(2); // remove `0.`
