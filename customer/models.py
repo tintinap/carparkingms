@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 # คนมีpointเพิ่ม
 from django.utils.encoding import force_text
@@ -55,6 +56,7 @@ class Reservation(models.Model):
     reserve_status = models.CharField(choices=TYPES,default='re',max_length=2)
     reserve_token = models.CharField(max_length=64)
     reserve_at = models.DateField()
+    point_use = models.IntegerField()
     register_user = models.ForeignKey(Register_user, models.PROTECT)
 
 
@@ -64,6 +66,11 @@ class Car(models.Model):
     car_brand = models.CharField(max_length=100)
     car_model = models.CharField(max_length=100)
     car_color = models.CharField(max_length=50)
+
+class Buypackage(models.Model):
+    point_added = models.IntegerField(null=False)
+    add_date = models.DateTimeField()
+    user = models.ForeignKey(User,models.PROTECT)
 # Create your models here.
 # class Regist_user(models.Model):
 #     username = models.CharField(max_length=255)

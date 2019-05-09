@@ -1,3 +1,4 @@
+import datetime
 import json
 
 from django.contrib.admin.views.decorators import staff_member_required
@@ -8,7 +9,7 @@ from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect
 
 from customer.form import LoginForm, UsernameForm, Addcarform, Editprofileform, Changepassform
-from customer.models import Parking_zone, Register_user, Car, User_sys, Parking_slot, Parking, Reservation
+from customer.models import Parking_zone, Register_user, Car, User_sys, Parking_slot, Parking, Reservation, Buypackage
 
 
 def index(request):
@@ -71,6 +72,11 @@ def buypackage(request):
     if request.method == "POST":
         re_user = Register_user.objects.get(user_id=u[0]['id'])
         #point HERE just create another table
+        buy= Buypackage.objects.create(
+            point_added = int(request.POST.get('point')),
+            add_date = datetime.datetime.now(),
+            user = request.user
+        )
         re_user.point = user[0]['point'] + int(request.POST.get('point'))
         re_user.save()
     user_1 = list(Register_user.objects.filter(user_id=u[0]['id']).values())
@@ -248,6 +254,7 @@ def api_index(request):
             reserve_token=reserve_info['token_auth'],
             reserve_at=reserve_info['timestamp'],
             parking_slot=park_ing,
+            point_use = int(reserve_info['option']['point']),
             register_user=re_u
         )
 
@@ -291,7 +298,8 @@ def parking(request,p_token):
         park_ing = Parking.objects.create(
             parking_slot=p_slot,
             parking_zone=p_zone,
-            parking_token=p_token
+            parking_token=p_token,
+            arrive_at = datetime.datetime.now(),
         )
         park = list(Parking_slot.objects.filter(id=park_ing.parking_slot_id).values())
         context = {
@@ -300,6 +308,9 @@ def parking(request,p_token):
     else:
         p_slot = Parking_slot.objects.get(id=i['parking_slot_id'])
         p_zone = Parking_zone.objects.get(id=i['parking_zone_id'])
+        parking = Parking.objects.get(parking_token=p_token)
+        parking.leave_at=datetime.datetime.now()
+        parking.save()
 
         p_slot.status = 1
         p_slot.save()
@@ -336,7 +347,8 @@ def reserve(request,r_token):
         park_ing = Parking.objects.create(
             parking_slot=p_slot,
             parking_zone=p_zone,
-            parking_token=r_token
+            parking_token=r_token,
+            arrive_at=datetime.datetime.now(),
         )
         park = list(Parking_slot.objects.filter(id=park_ing.parking_slot_id).values())
         context = {
@@ -345,6 +357,9 @@ def reserve(request,r_token):
     else:
         p_slot = Parking_slot.objects.get(id=i['parking_slot_id'])
         p_zone = Parking_zone.objects.get(id=i['parking_zone_id'])
+        parking = Parking.objects.get(parking_token=r_token)
+        parking.leave_at = datetime.datetime.now()
+        parking.save()
 
         p_slot.status = 1
         p_slot.save()
