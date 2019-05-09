@@ -389,7 +389,7 @@
 
           var expireTime = addMinutes(today, parseInt(this.reserveLimitTime.min, 10));
 
-          var reserveInfo = {time: this.reserveLimitTime, car: this.selectedCar, token_auth: token(), timestamp: dateat, expiredTime: expireTime,option: this.reserveLimitTime, type: 'reserve'}
+          var reserveInfo = {car: this.selectedCar, token_auth: token(), timestamp: dateat, expiredTime: expireTime,option: this.reserveLimitTime, type: 'reserve'}
 
           axios.post('http://127.0.0.1:8000/api_index/',
                     reserveInfo,

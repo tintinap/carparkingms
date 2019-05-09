@@ -70,6 +70,7 @@ def buypackage(request):
     user = list(Register_user.objects.filter(user_id=u[0]['id']).values())
     if request.method == "POST":
         re_user = Register_user.objects.get(user_id=u[0]['id'])
+        #point HERE just create another table
         re_user.point = user[0]['point'] + int(request.POST.get('point'))
         re_user.save()
     user_1 = list(Register_user.objects.filter(user_id=u[0]['id']).values())
@@ -233,6 +234,7 @@ def api_index(request):
         p_zone.save()
 
         u_point = Register_user.objects.get(user_id=u[0]['id'])
+        #HERE YOU THERE POINT
         u_point.point -= int(reserve_info['option']['point'])
         u_point.save()
         park_ing = Parking.objects.create(

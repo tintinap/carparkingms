@@ -65,17 +65,17 @@ class Car(models.Model):
     car_model = models.CharField(max_length=100)
     car_color = models.CharField(max_length=50)
 # Create your models here.
-class Regist_user(models.Model):
-    username = models.CharField(max_length=255)
-    user_fname = models.CharField(max_length=255)
-    user_lname = models.CharField(max_length=255)
-    password = models.CharField(max_length=255)
-    phone_number = models.CharField(max_length=10)
-    point = models.IntegerField()
-    user = models.ForeignKey(User_sys, models.PROTECT)
-class user(models.Model):
-    TYPES = (
-        ('re', 'register_user'),
-        ('gu', 'guess_user')
-    )
-    type = models.CharField(choices=TYPES, default='gu', max_length=2)
+# class Regist_user(models.Model):
+#     username = models.CharField(max_length=255)
+#     user_fname = models.CharField(max_length=255)
+#     user_lname = models.CharField(max_length=255)
+#     password = models.CharField(max_length=255)
+#     phone_number = models.CharField(max_length=10)
+#     point = models.IntegerField()
+#     user = models.ForeignKey(User_sys, models.PROTECT)
+# class user(models.Model):
+#     TYPES = (
+#         ('re', 'register_user'),
+#         ('gu', 'guess_user')
+#     )
+#     type = models.CharField(choices=TYPES, default='gu', max_length=2)
