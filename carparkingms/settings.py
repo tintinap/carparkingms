@@ -82,9 +82,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'carparkingms',
-        'USER': '60070074',
-        'PASSWORD': 'ICIocp61',
-        'HOST': '127.0.0.1',
+        'USER': 'carpark',
+        'PASSWORD': 'jusmistic',
+        'HOST': 'db',
         'PORT': '3306'
     }
 }
